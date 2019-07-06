@@ -20,7 +20,7 @@ for (const instance of instances) {
   const DP_ID = parseDatapackageIdentifier(instance.getAttribute('data-datapackage-json'))
 
   // Load Dataset object
-  Dataset.load(DP_ID).then(async (dataset) => {
+  Dataset.load(DP_ID).then(dataset => {
     dataset.descriptor.views.forEach(view => {
       const compiledView = dpRender.compileView(view, dataset.descriptor)
       // Render filters UI if data is in datastore
