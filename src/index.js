@@ -21,7 +21,8 @@ for (const instance of instances) {
 
   // Load Dataset object
   Dataset.load(DP_ID).then(dataset => {
-    dataset.descriptor.views.forEach(view => {
+    const views = dataset.descriptor.views || []
+    views.forEach(view => {
       const compiledView = compileView(view, dataset.descriptor)
       // Render filters UI if data is in datastore
       if (compiledView.resources[0].datastore_active) {
