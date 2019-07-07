@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import * as dpRender from 'datapackage-render'
+import { compileView } from 'datapackage-render'
 const { Dataset } = require('data.js')
 
 
@@ -22,7 +22,7 @@ for (const instance of instances) {
   // Load Dataset object
   Dataset.load(DP_ID).then(dataset => {
     dataset.descriptor.views.forEach(view => {
-      const compiledView = dpRender.compileView(view, dataset.descriptor)
+      const compiledView = compileView(view, dataset.descriptor)
       // Render filters UI if data is in datastore
       if (compiledView.resources[0].datastore_active) {
         render(compiledView)
