@@ -16,7 +16,6 @@ function App(props) {
       <div className="no-filters"></div>
     );
   }
-
 }
 
 export default App;
