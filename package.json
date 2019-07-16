@@ -9,11 +9,12 @@
     "data.js": "^0.12.8",
     "datapackage-render": "git+https://github.com/frictionlessdata/datapackage-render-js.git",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "react-querybuilder": "^1.4.3"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && mv build/static/js/runtime~main.*.js dist/js/runtime~main.js && mv build/static/js/main.*.chunk.js dist/js/main.js && mv build/static/js/2.*.chunk.js dist/js/2.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
