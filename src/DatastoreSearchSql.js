@@ -58,8 +58,57 @@ function DatastoreSearchSql(props) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <QueryBuilder fields={fields} onQueryChange={setQuery} />
-      <input type="submit" value="Submit" />
+      <QueryBuilder
+        fields={fields}
+        onQueryChange={setQuery}
+        combinators={[{name: 'and', label: 'AND'}]}
+        operators={[
+          {name: '=', label: '='},
+          {name: '!=', label: '!='},
+          {name: '<', label: '<'},
+          {name: '>', label: '>'},
+          {name: '<=', label: '<='},
+          {name: '>=', label: '>='}
+        ]}
+        controlElements={{
+          addGroupAction: () => <div style={{display: 'none'}}></div>,
+          combinatorSelector: () => <div style={{display: 'none'}}></div>
+        }}
+        translations={{
+          fields: {
+              title: "Fields",
+          },
+          operators: {
+              title: "Operators",
+          },
+          value: {
+              title: "Value",
+          },
+          removeRule: {
+              label: "x",
+              title: "Remove rule",
+          },
+          removeGroup: {
+              label: "x",
+              title: "Remove group",
+          },
+          addRule: {
+              label: "Add filter",
+              title: "Add rule",
+          },
+          addGroup: {
+              label: "Add group",
+              title: "Add group",
+          },
+          combinators: {
+              title: "Combinators",
+          }
+        }}
+      />
+
+      <div className="applyButton">
+        <input type="submit" value="Submit" />
+      </div>
     </form>
   )
 }
