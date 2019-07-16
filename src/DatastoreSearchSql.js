@@ -29,8 +29,31 @@ function DatastoreSearchSql(props) {
       sqlQueryString += ` LIMIT 100`
     }
     // Build a datastore URL with SQL string
-    // Fetch data and update datapcakge json
-    // QUESTION: is it ok to get DOM element here and update its property?
+    const datastoreUrl = props.apiUrl + `datastore_search_sql?sql=${sqlQueryString}`
+    // Fetch data and update data in the preview table
+    fetch(encodeURI(datastoreUrl))
+      .then(res => res.json())
+      .then(data => {
+        // Records come with 'count', '_id' and '_full_text' columns from datastore
+        // so we need to delete them. But first save 'count' value.
+        const count = data.result.records[0].count
+        // Update number of rows:
+        document.getElementById('numberOfRows').innerText = count
+        const newData = data.result.records.map(record => {
+          delete record.count
+          delete record._id
+          delete record._full_text
+          return record
+        })
+        window[`table${props.viewId}`].updateData(newData)
+        // Order of the columns are changed so make sure we don't mess it up:
+        const newHeaders = Object.keys(newData[0])
+        window[`table${props.viewId}`].addSettings({
+          colHeaders: newHeaders,
+          columns: undefined
+        })
+      })
+      .catch(error => console.error(error))
   }
 
   return (
