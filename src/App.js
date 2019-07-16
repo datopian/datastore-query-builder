@@ -8,7 +8,12 @@ function App(props) {
   if (view.resources[0].schema) {
     return (
       <div className="App">
-        <DatastoreSearchSql fields={view.resources[0].schema.fields} />
+        <DatastoreSearchSql
+          resourceId={view.resources[0].id}
+          viewId={view.id}
+          fields={view.resources[0].schema.fields}
+          apiUrl='https://www.energidataservice.dk/api/3/action/'
+        />
       </div>
     );
   } else {
