@@ -10,11 +10,14 @@
     "datapackage-render": "git+https://github.com/frictionlessdata/datapackage-render-js.git",
     "formik": "^1.5.8",
     "react": "^16.8.6",
+    "react-date-picker": "^7.7.0",
     "react-dom": "^16.8.6"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && mv build/static/js/runtime~main.*.js dist/js/runtime~main.js && mv build/static/js/main.*.chunk.js dist/js/main.js && mv build/static/js/2.*.chunk.js dist/js/2.js",
+    "build": "react-scripts build && yarn mv:js && yarn mv:css",
+    "mv:js": "mv build/static/js/runtime~main.*.js dist/js/runtime~main.js && mv build/static/js/main.*.chunk.js dist/js/main.js && mv build/static/js/2.*.chunk.js dist/js/2.js",
+    "mv:css": "mv build/static/css/2.*.chunk.css dist/css/2.css && mv build/static/css/main.*.chunk.css dist/css/main.css",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
