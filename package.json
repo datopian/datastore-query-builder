@@ -2,16 +2,17 @@
   "name": "datastore-query-builder",
   "version": "0.1.0",
   "private": true,
+  "module": "dist/index.js",
+  "main": "dist/index.js",
   "devDependencies": {
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
-    "@babel/preset-react": "^7.0.0",
     "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "react-cosmos": "^4.8.1",
     "react-scripts": "3.0.1"
   },
   "dependencies": {
-    "data.js": "^0.12.8",
-    "datapackage-render": "git+https://github.com/frictionlessdata/datapackage-render-js.git",
     "formik": "^1.5.8",
     "react": "^16.8.6",
     "react-date-picker": "^7.7.0",
@@ -21,12 +22,14 @@
     "presets": [
       "@babel/preset-env",
       "@babel/preset-react"
-    ],  
+    ],
     "plugins": [
       "@babel/plugin-proposal-class-properties"
-    ]   
-  },  
+    ]
+  },
   "scripts": {
+    "cosmos": "cosmos",
+    "cosmos:export": "cosmos-export",
     "start": "react-scripts start",
     "build": "react-scripts build && yarn mv:js && yarn mv:css",
     "build:package": "rm -rf dist/ && mkdir dist && mkdir dist/css && NODE_ENV=production npx babel src/ -d dist/ --copy-files",

@@ -4,9 +4,10 @@ import DatePicker from 'react-date-picker'
 
 
 function DatastoreSearchSql(props) {
+  const resource = JSON.parse(JSON.stringify(props.resource))
 
-  const dateField = props.fields.find(field => field.type && field.type.includes('date'))
-  const otherFields = props.fields.filter(field => !(field.type && field.type.includes('date')))
+  const dateField = resource.schema.fields.find(field => field.type && field.type.includes('date'))
+  const otherFields = resource.schema.fields.filter(field => !(field.type && field.type.includes('date')))
 
   const operators = [
     {name: '=', label: '='},
@@ -21,7 +22,7 @@ function DatastoreSearchSql(props) {
     const clonedValues = JSON.parse(JSON.stringify(values))
     // Convert query to SQL string. Note we're adding 'COUNT(*) OVER()' so that
     // we get number of total rows info.
-    let sqlQueryString = `SELECT COUNT(*) OVER (), * FROM "${props.resourceId}" WHERE `
+    let sqlQueryString = `SELECT COUNT(*) OVER (), * FROM "${resource.id}" WHERE `
     if (!clonedValues.startDate && !clonedValues.endDate && clonedValues.rules.length === 0) { // No filters given so alert about that
       alert('Please, provide at least one rule.')
     } else {
@@ -48,31 +49,10 @@ function DatastoreSearchSql(props) {
       sqlQueryString += ` LIMIT 100`
     }
     // Build a datastore URL with SQL string
-    const datastoreUrl = props.apiUrl + `datastore_search_sql?sql=${sqlQueryString}`
-    // Fetch data and update the preview table
-    fetch(encodeURI(datastoreUrl))
-      .then(res => res.json())
-      .then(data => {
-        // Records come with 'count', '_id' and '_full_text' columns from datastore
-        // so we need to delete them. But first save 'count' value.
-        const count = data.result.records[0] ? data.result.records[0].count : 0
-        // Update number of rows:
-        document.getElementById('numberOfRows').innerText = count
-        const newData = data.result.records.map(record => {
-          delete record.count
-          delete record._id
-          delete record._full_text
-          return record
-        })
-        window[`table${props.viewId}`].updateData(newData)
-        // Order of the columns are changed so make sure we don't mess it up:
-        const newHeaders = Object.keys(newData[0])
-        window[`table${props.viewId}`].addSettings({
-          colHeaders: newHeaders,
-          columns: undefined
-        })
-      })
-      .catch(error => console.error(error))
+    const datastoreUrl = encodeURI(props.apiUrl + `datastore_search_sql?sql=${sqlQueryString}`)
+    // Trigger Redux action
+    resource.path = datastoreUrl
+    props.action(resource)
   }
 
   return (
