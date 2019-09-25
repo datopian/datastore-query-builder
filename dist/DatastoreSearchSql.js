@@ -132,9 +132,12 @@ function DatastoreSearchSql(props) {
       })) : '', _react.default.createElement(_formik.FieldArray, {
         name: "rules",
         render: function render(arrayHelpers) {
-          return _react.default.createElement("div", null, values.rules && values.rules.length > 0 ? values.rules.map(function (rule, index) {
+          return _react.default.createElement("div", {
+            className: "dq-rule-container"
+          }, values.rules && values.rules.length > 0 ? values.rules.map(function (rule, index) {
             return _react.default.createElement("div", {
-              key: index
+              key: index,
+              className: "dq-rule-item"
             }, _react.default.createElement(_formik.Field, {
               name: "rules.".concat(index, ".combinator"),
               component: "select",
@@ -170,14 +173,14 @@ function DatastoreSearchSql(props) {
               required: true
             }), _react.default.createElement("button", {
               type: "button",
-              className: "btn btn-default",
+              className: "btn btn-default dq-btn-remove",
               onClick: function onClick() {
                 return arrayHelpers.remove(index);
               } // remove a rule from the list
 
             }, "-"), _react.default.createElement("button", {
               type: "button",
-              className: "btn btn-default",
+              className: "btn btn-default dq-btn-add",
               onClick: function onClick() {
                 return arrayHelpers.insert(index, {
                   combinator: 'AND',
@@ -190,7 +193,7 @@ function DatastoreSearchSql(props) {
             }, "+"));
           }) : _react.default.createElement("button", {
             type: "button",
-            className: "btn btn-default",
+            className: "btn btn-default dq-rule-add",
             onClick: function onClick() {
               return arrayHelpers.push({
                 combinator: 'AND',
@@ -199,7 +202,9 @@ function DatastoreSearchSql(props) {
                 value: ''
               });
             }
-          }, "Add a rule"), _react.default.createElement("div", null, _react.default.createElement("button", {
+          }, "Add a rule"), _react.default.createElement("div", {
+            className: "dq-rule-submit"
+          }, _react.default.createElement("button", {
             type: "submit",
             className: "btn btn-primary"
           }, "Submit")));
