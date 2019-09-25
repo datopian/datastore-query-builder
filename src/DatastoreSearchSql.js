@@ -87,10 +87,10 @@ function DatastoreSearchSql(props) {
           <FieldArray
             name='rules'
             render={arrayHelpers => (
-              <div>
+              <div className="dq-rule-container">
                 {values.rules && values.rules.length > 0 ? (
                   values.rules.map((rule, index) => (
-                    <div key={index}>
+                    <div key={index} className="dq-rule-item">
                       <Field name={`rules.${index}.combinator`} component="select" className="form-control" required>
                         <option value="AND">AND</option>
                         <option value="OR">OR</option>
@@ -108,14 +108,14 @@ function DatastoreSearchSql(props) {
                       <Field name={`rules.${index}.value`} className="form-control" required />
                       <button
                         type="button"
-                        className="btn btn-default"
+                        className="btn btn-default dq-btn-remove"
                         onClick={() => arrayHelpers.remove(index)} // remove a rule from the list
                       >
                         -
                       </button>
                       <button
                         type="button"
-                        className="btn btn-default"
+                        className="btn btn-default dq-btn-add"
                         onClick={() => arrayHelpers.insert(index, {combinator: 'AND', field: otherFields[0].name, operator: '=', value: ''})} // insert an empty rule at a position
                       >
                         +
@@ -123,12 +123,12 @@ function DatastoreSearchSql(props) {
                     </div>
                   ))
                 ) : (
-                  <button type="button" className="btn btn-default" onClick={() => arrayHelpers.push({combinator: 'AND', field: otherFields[0].name, operator: '=', value: ''})}>
+                  <button type="button" className="btn btn-default dq-rule-add" onClick={() => arrayHelpers.push({combinator: 'AND', field: otherFields[0].name, operator: '=', value: ''})}>
                     {/* show this when user has removed all rules from the list */}
                     Add a rule
                   </button>
                 )}
-                <div>
+                <div className="dq-rule-submit">
                   <button type="submit" className="btn btn-primary">Submit</button>
                 </div>
               </div>
