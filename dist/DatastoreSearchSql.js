@@ -90,7 +90,7 @@ function DatastoreSearchSql(props) {
 
     var datastoreUrl = encodeURI(props.apiUrl + "datastore_search_sql?sql=".concat(sqlQueryString)); // Trigger Redux action
 
-    resource.path = datastoreUrl;
+    resource.api = datastoreUrl;
     props.action(resource);
   }
 
