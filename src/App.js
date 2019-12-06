@@ -3,16 +3,16 @@ import './App.css';
 import DatastoreSearchSql from './DatastoreSearchSql';
 
 
-function App(props) {
-  const view = props.view
-  if (view.resources[0].schema) {
+export const QueryBuilder = (props) => {
+  const resource = JSON.parse(JSON.stringify(props.resource))
+  if (resource.schema) {
+    const apiUrl = (new URL(resource.path)).origin + '/api/3/action/'
     return (
       <div className="App">
         <DatastoreSearchSql
-          resourceId={view.resources[0].id}
-          viewId={view.id}
-          fields={view.resources[0].schema.fields}
-          apiUrl='https://www.energidataservice.dk/api/3/action/'
+          resource={resource}
+          apiUrl={apiUrl}
+          action={props.filterBuilderAction}
         />
       </div>
     );
@@ -22,5 +22,3 @@ function App(props) {
     );
   }
 }
-
-export default App;
