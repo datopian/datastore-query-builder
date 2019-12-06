@@ -88,6 +88,8 @@ function DatastoreSearchSql(props) {
             name='rules'
             render={arrayHelpers => (
               <div className="dq-rule-container">
+                <div className="dq-heading"></div>
+                <div className="dq-body">
                 {values.rules && values.rules.length > 0 ? (
                   values.rules.map((rule, index) => (
                     <div key={index} className="dq-rule-item">
@@ -128,7 +130,8 @@ function DatastoreSearchSql(props) {
                     Add a rule
                   </button>
                 )}
-                <div className="dq-rule-submit">
+                </div>
+                <div className="dq-rule-submit dq-footer">
                   <button type="submit" className="btn btn-primary">Submit</button>
                 </div>
               </div>
