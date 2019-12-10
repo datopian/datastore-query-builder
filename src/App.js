@@ -6,7 +6,8 @@ import DatastoreSearchSql from './DatastoreSearchSql';
 export const QueryBuilder = (props) => {
   const resource = JSON.parse(JSON.stringify(props.resource))
   if (resource.schema) {
-    const apiUrl = (new URL(resource.path)).origin + '/api/3/action/'
+    const apiUrl = resource.proxy
+      || (new URL(resource.path)).origin + '/api/3/action/'
     return (
       <div className="App">
         <DatastoreSearchSql

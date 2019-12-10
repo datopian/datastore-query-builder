@@ -17,7 +17,7 @@ var QueryBuilder = function QueryBuilder(props) {
   var resource = JSON.parse(JSON.stringify(props.resource));
 
   if (resource.schema) {
-    var apiUrl = new URL(resource.path).origin + '/api/3/action/';
+    var apiUrl = resource.proxy || new URL(resource.path).origin + '/api/3/action/';
     return _react.default.createElement("div", {
       className: "App"
     }, _react.default.createElement(_DatastoreSearchSql.default, {
