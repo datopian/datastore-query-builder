@@ -22,7 +22,8 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git commit -m "[dist]: Auto-commit from github actions." -a
+          git add dist/
+          git commit -m "[dist]: Auto-commit from github actions."
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
