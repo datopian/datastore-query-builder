@@ -22,7 +22,7 @@ function DatastoreSearchSql(props) {
     const clonedValues = JSON.parse(JSON.stringify(values))
     // Convert query to SQL string. Note we're adding 'COUNT(*) OVER()' so that
     // we get number of total rows info.
-    let sqlQueryString = `SELECT COUNT(*) OVER (), * FROM "${resource.id}" WHERE `
+    let sqlQueryString = `SELECT COUNT(*) OVER () AS _count, * FROM "${resource.id}" WHERE `
     if (!clonedValues.startDate && !clonedValues.endDate && clonedValues.rules.length === 0) { // No filters given so alert about that
       alert('Please, provide at least one rule.')
     } else {
