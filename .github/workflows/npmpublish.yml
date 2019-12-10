@@ -15,19 +15,6 @@ jobs:
           node-version: 12
       - run: yarn
       - run: yarn test
-      - name: Create dist version for NPM
-        run: |
-          yarn build:package
-      - name: Commit files
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add dist/
-          git commit -m "[dist]: Auto-commit from github actions."
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.gh_token }}
 
   publish-npm:
     needs: build

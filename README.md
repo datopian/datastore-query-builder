@@ -66,3 +66,30 @@ The build is minified and the filenames include the hashes.<br>
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+## Release
+
+When releasing a new version of this module, please, make sure you've built compiled version of the files:
+
+```bash
+yarn build:package
+# Since this a release, you need to change version number in package.json file.
+# E.g., this is a patch release so my `0.3.6` will become `0.3.7`.
+# Now commit the changes
+git add dist/ package.json
+git commit -m "[v0.3.7]: your commit message."
+```
+
+Next, you need to tag your commit and add some descriptive message about the release:
+
+```bash
+git tag -a v0.3.7 -m "Your release message."
+```
+
+Now you can push your commits and tags:
+
+```bash
+git push origin branch && git push origin branch --tags
+```
+
+The tag will initiate a Github action that will publish the release to NPM.
