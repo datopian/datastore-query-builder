@@ -5,11 +5,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+require("./i18n/i18n");
+
 var _react = _interopRequireDefault(require("react"));
 
 var _formik = require("formik");
 
 var _reactDatePicker = _interopRequireDefault(require("react-date-picker"));
+
+var _reactI18next = require("react-i18next");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21,6 +25,10 @@ function DatastoreSearchSql(props) {
   var otherFields = resource.schema.fields.filter(function (field) {
     return !(field.type && field.type.includes('date'));
   });
+
+  var _useTranslation = (0, _reactI18next.useTranslation)(),
+      t = _useTranslation.t;
+
   var operators = [{
     name: '=',
     label: '='
@@ -206,12 +214,12 @@ function DatastoreSearchSql(props) {
                 value: ''
               });
             }
-          }, "Add a rule")), _react.default.createElement("div", {
+          }, t('Add a rule'))), _react.default.createElement("div", {
             className: "dq-rule-submit dq-footer"
           }, _react.default.createElement("button", {
             type: "submit",
             className: "btn btn-primary"
-          }, "Submit")));
+          }, t('Submit'))));
         }
       }));
     }
