@@ -1,6 +1,9 @@
+import "./i18n/i18n"
+
 import React from 'react';
 import {Formik, Form, FieldArray, Field} from 'formik'
 import DatePicker from 'react-date-picker'
+import {useTranslation} from "react-i18next"
 
 
 function DatastoreSearchSql(props) {
@@ -8,6 +11,8 @@ function DatastoreSearchSql(props) {
 
   const dateField = resource.schema.fields.find(field => field.type && field.type.includes('date'))
   const otherFields = resource.schema.fields.filter(field => !(field.type && field.type.includes('date')))
+
+  const { t } = useTranslation();
 
   const operators = [
     {name: '=', label: '='},
@@ -127,12 +132,12 @@ function DatastoreSearchSql(props) {
                 ) : (
                   <button type="button" className="btn btn-default dq-rule-add" onClick={() => arrayHelpers.push({combinator: 'AND', field: otherFields[0].name, operator: '=', value: ''})}>
                     {/* show this when user has removed all rules from the list */}
-                    Add a rule
+                    {t('Add a rule')}
                   </button>
                 )}
                 </div>
                 <div className="dq-rule-submit dq-footer">
-                  <button type="submit" className="btn btn-primary">Submit</button>
+                  <button type="submit" className="btn btn-primary">{t('Submit')}</button>
                 </div>
               </div>
             )}

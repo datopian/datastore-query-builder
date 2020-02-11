@@ -724,6 +724,13 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
+"@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5":
+  version "7.8.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.8.0.tgz#8c81711517c56b3d00c6de706b0fb13dc3531549"
+  integrity sha512-Z7ti+HB0puCcLmFE3x90kzaVgbx6TRrYIReaygW6EkBEnJh1ajS4/inhF7CypzWeDV3NFl1AfWj0eMtdihojxw==
+  dependencies:
+    regenerator-runtime "^0.13.2"
+
 "@babel/template@^7.1.0", "@babel/template@^7.4.0", "@babel/template@^7.4.4":
   version "7.4.4"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.4.4.tgz#f4b88d1225689a08f5bc3a17483545be9e4ed237"
@@ -2264,13 +2271,17 @@ commander@2.17.x:
   version "2.17.1"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
 
-commander@^2.11.0, commander@^2.19.0, commander@^2.20.0, commander@^2.8.1, commander@~2.20.0:
+commander@^2.11.0, commander@^2.19.0, commander@^2.20.0, commander@^2.8.1:
   version "2.20.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.0.tgz#d58bb2b5c1ee8f87b0d340027e9e94e222c5a422"
 
 commander@~2.19.0:
   version "2.19.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.19.0.tgz#f6198aa84e5b83c46054b94ddedbfed5ee9ff12a"
+
+commander@~2.20.3:
+  version "2.20.3"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
 
 common-tags@^1.8.0:
   version "1.8.0"
@@ -3992,8 +4003,8 @@ handle-thing@^2.0.0:
   resolved "https://registry.yarnpkg.com/handle-thing/-/handle-thing-2.0.0.tgz#0e039695ff50c93fc288557d696f3c1dc6776754"
 
 handlebars@^4.1.2:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.1.2.tgz#b6b37c1ced0306b221e094fc7aca3ec23b131b67"
+  version "4.5.3"
+  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.5.3.tgz#5cf75bd8714f7605713511a56be7c349becb0482"
   dependencies:
     neo-async "^2.6.0"
     optimist "^0.6.1"
@@ -4166,6 +4177,13 @@ html-minifier@^3.5.20:
     relateurl "0.2.x"
     uglify-js "3.4.x"
 
+html-parse-stringify2@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/html-parse-stringify2/-/html-parse-stringify2-2.0.1.tgz#dc5670b7292ca158b7bc916c9a6735ac8872834a"
+  integrity sha1-3FZwtyksoVi3vJFsmmc1rIhyg0o=
+  dependencies:
+    void-elements "^2.0.1"
+
 html-webpack-plugin@4.0.0-beta.5:
   version "4.0.0-beta.5"
   resolved "https://registry.yarnpkg.com/html-webpack-plugin/-/html-webpack-plugin-4.0.0-beta.5.tgz#2c53083c1151bfec20479b1f8aaf0039e77b5513"
@@ -4253,6 +4271,20 @@ http-signature@~1.2.0:
 https-browserify@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/https-browserify/-/https-browserify-1.0.0.tgz#ec06c10e0a34c0f2faf199f7fd7fc78fffd03c73"
+
+i18next-browser-languagedetector@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/i18next-browser-languagedetector/-/i18next-browser-languagedetector-4.0.1.tgz#6a0b44a93835146287130da36ce3d04a1836879f"
+  integrity sha512-RxSoX6mB8cab0CTIQ+klCS764vYRj+Jk621cnFVsINvcdlb/cdi3vQFyrPwmnowB7ReUadjHovgZX+RPIzHVQQ==
+  dependencies:
+    "@babel/runtime" "^7.5.5"
+
+i18next@^19.0.3:
+  version "19.0.3"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-19.0.3.tgz#31fd3165762d9802e08a2a86932db4eff5c862e9"
+  integrity sha512-Ru4afr++b4cUApsIBifcMYyWG9Nx8wlFdq4DuOF+UuoPoQKfuh0iAVMekTjs6w1CZLUOVb5QZEuoYRLmu17EIA==
+  dependencies:
+    "@babel/runtime" "^7.3.1"
 
 iconv-lite@0.4.24, iconv-lite@^0.4.24, iconv-lite@^0.4.4, iconv-lite@~0.4.13:
   version "0.4.24"
@@ -7518,6 +7550,14 @@ react-fit@^1.0.3:
     detect-element-overflow "^1.1.1"
     prop-types "^15.6.0"
 
+react-i18next@^11.3.0:
+  version "11.3.0"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.3.0.tgz#8c827b084708924fd2e8c787aca78e0f7966fa44"
+  integrity sha512-ahpEF2wYmTHkrZiz/Kgh6qW7KT0ZV2Kd0PEr7277V9+qBmBQIYXwsCWjKEDNY/nTxFpfz4DlLPdVvjerWt7uqQ==
+  dependencies:
+    "@babel/runtime" "^7.3.1"
+    html-parse-stringify2 "2.0.1"
+
 react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.4:
   version "16.9.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.9.0.tgz#21ca9561399aad0ff1a7701c01683e8ca981edcb"
@@ -8821,10 +8861,10 @@ uglify-js@3.4.x:
     source-map "~0.6.1"
 
 uglify-js@^3.1.4:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.6.0.tgz#704681345c53a8b2079fb6cec294b05ead242ff5"
+  version "3.7.3"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.7.3.tgz#f918fce9182f466d5140f24bb0ff35c2d32dcc6a"
   dependencies:
-    commander "~2.20.0"
+    commander "~2.20.3"
     source-map "~0.6.1"
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
@@ -9007,6 +9047,11 @@ verror@1.10.0:
 vm-browserify@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.0.tgz#bd76d6a23323e2ca8ffa12028dc04559c75f9019"
+
+void-elements@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
+  integrity sha1-wGavtYK7HLQSjWDqkjkulNXp2+w=
 
 w3c-hr-time@^1.0.1:
   version "1.0.1"
