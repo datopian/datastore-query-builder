@@ -107,8 +107,10 @@ function DatastoreSearchSql(props) {
       var values = _ref.values,
           setFieldValue = _ref.setFieldValue;
       return _react.default.createElement(_formik.Form, {
-        className: "form-inline"
-      }, dateField ? _react.default.createElement("div", null, _react.default.createElement(_reactDatePicker.default, {
+        className: "form-inline dq-main-container"
+      }, _react.default.createElement("div", {
+        className: "dq-heading"
+      }), dateField ? _react.default.createElement("div", null, _react.default.createElement(_reactDatePicker.default, {
         value: values.startDate,
         clearIcon: "X",
         onChange: function onChange(val) {
@@ -135,8 +137,6 @@ function DatastoreSearchSql(props) {
           return _react.default.createElement("div", {
             className: "dq-rule-container"
           }, _react.default.createElement("div", {
-            className: "dq-heading"
-          }), _react.default.createElement("div", {
             className: "dq-body"
           }, values.rules && values.rules.length > 0 ? values.rules.map(function (rule, index) {
             return _react.default.createElement("div", {

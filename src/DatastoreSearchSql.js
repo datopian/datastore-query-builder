@@ -62,7 +62,8 @@ function DatastoreSearchSql(props) {
         handleSubmit(values)
       }
       render={({ values, setFieldValue }) => (
-        <Form className="form-inline">
+        <Form className="form-inline dq-main-container">
+          <div className="dq-heading"></div>
           {dateField ? (
             <div>
               <DatePicker
@@ -88,7 +89,6 @@ function DatastoreSearchSql(props) {
             name='rules'
             render={arrayHelpers => (
               <div className="dq-rule-container">
-                <div className="dq-heading"></div>
                 <div className="dq-body">
                 {values.rules && values.rules.length > 0 ? (
                   values.rules.map((rule, index) => (
