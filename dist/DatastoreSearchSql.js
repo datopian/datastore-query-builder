@@ -49,52 +49,58 @@ function DatastoreSearchSql(props) {
     label: '>='
   }];
 
+  function _validate(values) {
+    var clonedValues = JSON.parse(JSON.stringify(values));
+    var errors = {};
+
+    if (!clonedValues.startDate && !clonedValues.endDate && clonedValues.rules.length === 0) {
+      // No filters given so alert about that
+      errors.message = 'Please, provide at least one rule.';
+    }
+
+    return errors;
+  }
+
   function handleSubmit(values) {
     var clonedValues = JSON.parse(JSON.stringify(values)); // Convert query to SQL string. Note we're adding 'COUNT(*) OVER()' so that
     // we get number of total rows info.
 
     var sqlQueryString = "SELECT COUNT(*) OVER () AS _count, * FROM \"".concat(resource.id, "\" WHERE ");
 
-    if (!clonedValues.startDate && !clonedValues.endDate && clonedValues.rules.length === 0) {
-      // No filters given so alert about that
-      alert('Please, provide at least one rule.');
-    } else {
-      if (clonedValues.startDate) {
-        var rule = {
-          combinator: 'AND',
-          field: dateField.name,
-          operator: '>=',
-          value: clonedValues.startDate
-        };
-        clonedValues.rules.push(rule);
+    if (clonedValues.startDate) {
+      var rule = {
+        combinator: 'AND',
+        field: dateField.name,
+        operator: '>=',
+        value: clonedValues.startDate
+      };
+      clonedValues.rules.push(rule);
+    }
+
+    if (clonedValues.endDate) {
+      var _rule = {
+        combinator: 'AND',
+        field: dateField.name,
+        operator: '<=',
+        value: clonedValues.endDate
+      };
+      clonedValues.rules.push(_rule);
+    }
+
+    clonedValues.rules.forEach(function (rule, index) {
+      // Convert JS date object into string:
+      rule.value = rule.value instanceof Date ? rule.value.toISOString() : rule.value;
+
+      if (index === 0) {
+        // TODO: unquote value for numbers
+        sqlQueryString += "\"".concat(rule.field, "\" ").concat(rule.operator, " '").concat(rule.value, "'");
+      } else {
+        // If we have >1 rule we will need 'AND', 'OR' combinators
+        sqlQueryString += " ".concat(rule.combinator.toUpperCase(), " \"").concat(rule.field, "\" ").concat(rule.operator, " '").concat(rule.value, "'");
       }
+    }); // Set a limit of 100 rows as we don't need more for previewing...
 
-      if (clonedValues.endDate) {
-        var _rule = {
-          combinator: 'AND',
-          field: dateField.name,
-          operator: '<=',
-          value: clonedValues.endDate
-        };
-        clonedValues.rules.push(_rule);
-      }
-
-      clonedValues.rules.forEach(function (rule, index) {
-        // Convert JS date object into string:
-        rule.value = rule.value instanceof Date ? rule.value.toISOString() : rule.value;
-
-        if (index === 0) {
-          // TODO: unquote value for numbers
-          sqlQueryString += "\"".concat(rule.field, "\" ").concat(rule.operator, " '").concat(rule.value, "'");
-        } else {
-          // If we have >1 rule we will need 'AND', 'OR' combinators
-          sqlQueryString += " ".concat(rule.combinator.toUpperCase(), " \"").concat(rule.field, "\" ").concat(rule.operator, " '").concat(rule.value, "'");
-        }
-      }); // Set a limit of 100 rows as we don't need more for previewing...
-
-      sqlQueryString += " LIMIT 100";
-    } // Build a datastore URL with SQL string
-
+    sqlQueryString += " LIMIT 100"; // Build a datastore URL with SQL string
 
     var datastoreUrl = encodeURI(props.apiUrl + "datastore_search_sql?sql=".concat(sqlQueryString)); // Trigger Redux action
 
@@ -108,12 +114,16 @@ function DatastoreSearchSql(props) {
       startDate: null,
       endDate: null
     },
+    validate: function validate(values) {
+      return _validate(values);
+    },
     onSubmit: function onSubmit(values) {
       return handleSubmit(values);
     },
     render: function render(_ref) {
       var values = _ref.values,
-          setFieldValue = _ref.setFieldValue;
+          setFieldValue = _ref.setFieldValue,
+          handleReset = _ref.handleReset;
       return _react.default.createElement(_formik.Form, {
         className: "form-inline dq-main-container"
       }, _react.default.createElement("div", {
@@ -218,8 +228,12 @@ function DatastoreSearchSql(props) {
             className: "dq-rule-submit dq-footer"
           }, _react.default.createElement("button", {
             type: "submit",
-            className: "btn btn-primary"
-          }, t('Submit'))));
+            className: "btn btn-primary submit-button"
+          }, t('Submit')), _react.default.createElement("button", {
+            type: "submit",
+            className: "btn btn-primary reset-button",
+            onClick: handleReset
+          }, t('Reset'))));
         }
       }));
     }
