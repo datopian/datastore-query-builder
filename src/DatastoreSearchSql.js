@@ -23,36 +23,42 @@ function DatastoreSearchSql(props) {
     {name: '>=', label: '>='}
   ]
 
+  function validate(values) {
+    const clonedValues = JSON.parse(JSON.stringify(values))
+    const errors = {}
+    if (!clonedValues.startDate && !clonedValues.endDate && clonedValues.rules.length === 0) { // No filters given so alert about that
+      errors.message = 'Please, provide at least one rule.'
+    }
+    return errors
+  }
+
   function handleSubmit(values) {
     const clonedValues = JSON.parse(JSON.stringify(values))
     // Convert query to SQL string. Note we're adding 'COUNT(*) OVER()' so that
     // we get number of total rows info.
     let sqlQueryString = `SELECT COUNT(*) OVER () AS _count, * FROM "${resource.id}" WHERE `
-    if (!clonedValues.startDate && !clonedValues.endDate && clonedValues.rules.length === 0) { // No filters given so alert about that
-      alert('Please, provide at least one rule.')
-    } else {
-      if (clonedValues.startDate) {
-        const rule = {combinator: 'AND', field: dateField.name, operator: '>=', value: clonedValues.startDate}
-        clonedValues.rules.push(rule)
-      }
-      if (clonedValues.endDate) {
-        const rule = {combinator: 'AND', field: dateField.name, operator: '<=', value: clonedValues.endDate}
-        clonedValues.rules.push(rule)
-      }
-
-      clonedValues.rules.forEach((rule, index) => {
-        // Convert JS date object into string:
-        rule.value = rule.value instanceof Date ? rule.value.toISOString() : rule.value
-        if (index === 0) {
-          // TODO: unquote value for numbers
-          sqlQueryString += `"${rule.field}" ${rule.operator} '${rule.value}'`
-        } else { // If we have >1 rule we will need 'AND', 'OR' combinators
-          sqlQueryString += ` ${rule.combinator.toUpperCase()} "${rule.field}" ${rule.operator} '${rule.value}'`
-        }
-      })
-      // Set a limit of 100 rows as we don't need more for previewing...
-      sqlQueryString += ` LIMIT 100`
+    if (clonedValues.startDate) {
+      const rule = {combinator: 'AND', field: dateField.name, operator: '>=', value: clonedValues.startDate}
+      clonedValues.rules.push(rule)
     }
+    if (clonedValues.endDate) {
+      const rule = {combinator: 'AND', field: dateField.name, operator: '<=', value: clonedValues.endDate}
+      clonedValues.rules.push(rule)
+    }
+
+    clonedValues.rules.forEach((rule, index) => {
+      // Convert JS date object into string:
+      rule.value = rule.value instanceof Date ? rule.value.toISOString() : rule.value
+      if (index === 0) {
+        // TODO: unquote value for numbers
+        sqlQueryString += `"${rule.field}" ${rule.operator} '${rule.value}'`
+      } else { // If we have >1 rule we will need 'AND', 'OR' combinators
+        sqlQueryString += ` ${rule.combinator.toUpperCase()} "${rule.field}" ${rule.operator} '${rule.value}'`
+      }
+    })
+    // Set a limit of 100 rows as we don't need more for previewing...
+    sqlQueryString += ` LIMIT 100`
+
     // Build a datastore URL with SQL string
     const datastoreUrl = encodeURI(props.apiUrl + `datastore_search_sql?sql=${sqlQueryString}`)
     // Trigger Redux action
@@ -63,6 +69,9 @@ function DatastoreSearchSql(props) {
   return (
     <Formik
       initialValues={{ rules: [], startDate: null, endDate: null }}
+      validate={values =>
+        validate(values)
+      }
       onSubmit={values =>
         handleSubmit(values)
       }
