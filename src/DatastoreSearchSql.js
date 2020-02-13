@@ -75,7 +75,7 @@ function DatastoreSearchSql(props) {
       onSubmit={values =>
         handleSubmit(values)
       }
-      render={({ values, setFieldValue }) => (
+      render={({ values, setFieldValue, handleReset }) => (
         <Form className="form-inline dq-main-container">
           <div className="dq-heading"></div>
           {dateField ? (
@@ -146,7 +146,8 @@ function DatastoreSearchSql(props) {
                 )}
                 </div>
                 <div className="dq-rule-submit dq-footer">
-                  <button type="submit" className="btn btn-primary">{t('Submit')}</button>
+                  <button type="submit" className="btn btn-primary submit-button">{t('Submit')}</button>
+                  <button type="submit" className="btn btn-primary reset-button" onClick={handleReset}>{t('Reset')}</button>
                 </div>
               </div>
             )}
