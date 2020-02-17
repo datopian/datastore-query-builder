@@ -108,6 +108,12 @@ function DatastoreSearchSql(props) {
     props.action(resource);
   }
 
+  function handleReset() {
+    // Initial api url should be `datastore_search` without any options.
+    resource.api = props.apiUrl + "datastore_search?resource_id=".concat(resource.id, "&limit=100");
+    props.action(resource);
+  }
+
   return _react.default.createElement(_formik.Formik, {
     initialValues: {
       rules: [],
@@ -119,6 +125,9 @@ function DatastoreSearchSql(props) {
     },
     onSubmit: function onSubmit(values) {
       return handleSubmit(values);
+    },
+    onReset: function onReset() {
+      return handleReset();
     },
     render: function render(_ref) {
       var values = _ref.values,

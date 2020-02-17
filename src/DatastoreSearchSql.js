@@ -66,6 +66,12 @@ function DatastoreSearchSql(props) {
     props.action(resource)
   }
 
+  function handleReset() {
+    // Initial api url should be `datastore_search` without any options.
+    resource.api = props.apiUrl + `datastore_search?resource_id=${resource.id}&limit=100`
+    props.action(resource)
+  }
+
   return (
     <Formik
       initialValues={{ rules: [], startDate: null, endDate: null }}
@@ -74,6 +80,9 @@ function DatastoreSearchSql(props) {
       }
       onSubmit={values =>
         handleSubmit(values)
+      }
+      onReset={() =>
+        handleReset()
       }
       render={({ values, setFieldValue, handleReset }) => (
         <Form className="form-inline dq-main-container">
