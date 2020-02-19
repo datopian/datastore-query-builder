@@ -6,8 +6,18 @@ import DatastoreSearchSql from './DatastoreSearchSql';
 export const QueryBuilder = (props) => {
   const resource = JSON.parse(JSON.stringify(props.resource))
   if (resource.schema) {
-    let apiUrl = resource.proxy || resource.api || resource.path
-    apiUrl = (new URL(apiUrl)).origin + '/api/3/action/'
+    let apiUrl
+    if (resource.proxy || resource.api) {
+      const urlObj = new URL(resource.proxy || resource.api)
+      // Remove action name from the URL so we get base API URL
+      let pathParts = urlObj.pathname.split('/')
+      pathParts.pop()
+      urlObj.pathname = pathParts.join('/') + '/' // Trailing slash for consistency
+      urlObj.search = '' // Remove all search params
+      apiUrl = urlObj.href
+    } else {
+      apiUrl = (new URL(resource.path)).origin + '/api/3/action/'
+    }
     return (
       <div className="App">
         <DatastoreSearchSql

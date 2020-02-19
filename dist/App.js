@@ -17,8 +17,22 @@ var QueryBuilder = function QueryBuilder(props) {
   var resource = JSON.parse(JSON.stringify(props.resource));
 
   if (resource.schema) {
-    var apiUrl = resource.proxy || resource.api || resource.path;
-    apiUrl = new URL(apiUrl).origin + '/api/3/action/';
+    var apiUrl;
+
+    if (resource.proxy || resource.api) {
+      var urlObj = new URL(resource.proxy || resource.api); // Remove action name from the URL so we get base API URL
+
+      var pathParts = urlObj.pathname.split('/');
+      pathParts.pop();
+      urlObj.pathname = pathParts.join('/') + '/'; // Trailing slash for consistency
+
+      urlObj.search = ''; // Remove all search params
+
+      apiUrl = urlObj.href;
+    } else {
+      apiUrl = new URL(resource.path).origin + '/api/3/action/';
+    }
+
     return _react.default.createElement("div", {
       className: "App"
     }, _react.default.createElement(_DatastoreSearchSql.default, {
