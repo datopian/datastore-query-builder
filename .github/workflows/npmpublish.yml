@@ -15,6 +15,7 @@ jobs:
           node-version: 12
       - run: yarn
       - run: yarn test
+      - run: yarn build:package
 
   publish-npm:
     needs: build
@@ -25,7 +26,6 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
-      - run: yarn build:package
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
