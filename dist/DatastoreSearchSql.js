@@ -143,8 +143,7 @@ function DatastoreSearchSql(props) {
         onChange: function onChange(val) {
           return setFieldValue("startDate", val);
         },
-        format: "yyyy-MM-dd",
-        maxDate: new Date()
+        format: "yyyy-MM-dd"
       }), _react.default.createElement("i", {
         className: "fa fa-long-arrow-right",
         "aria-hidden": "true"
@@ -156,9 +155,13 @@ function DatastoreSearchSql(props) {
         },
         returnValue: "end",
         format: "yyyy-MM-dd",
-        minDate: values.startDate,
-        maxDate: new Date()
-      })) : '', _react.default.createElement(_formik.FieldArray, {
+        minDate: values.startDate
+      }), _react.default.createElement("div", {
+        className: "datetime-field-name",
+        style: {
+          display: 'none'
+        }
+      }, dateField.title || dateField.name)) : '', _react.default.createElement(_formik.FieldArray, {
         name: "rules",
         render: function render(arrayHelpers) {
           return _react.default.createElement("div", {
