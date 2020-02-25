@@ -93,8 +93,7 @@ function DatastoreSearchSql(props) {
                 value={values.startDate}
                 clearIcon='X'
                 onChange={val => setFieldValue(`startDate`, val)}
-                format='yyyy-MM-dd'
-                maxDate={new Date()} />
+                format='yyyy-MM-dd' />
               <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
               <DatePicker
                   value={values.endDate}
@@ -102,8 +101,7 @@ function DatastoreSearchSql(props) {
                   onChange={val => setFieldValue(`endDate`, val)}
                   returnValue='end'
                   format='yyyy-MM-dd'
-                  minDate={values.startDate}
-                  maxDate={new Date()} />
+                  minDate={values.startDate} />
             </div>
           ) : (
             ''
