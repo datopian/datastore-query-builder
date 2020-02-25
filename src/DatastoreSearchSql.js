@@ -102,6 +102,9 @@ function DatastoreSearchSql(props) {
                   returnValue='end'
                   format='yyyy-MM-dd'
                   minDate={values.startDate} />
+                <div className="datetime-field-name" style={{display: 'none'}}>
+                  {dateField.title || dateField.name}
+                </div>
             </div>
           ) : (
             ''
