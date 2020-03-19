@@ -100,7 +100,7 @@ function DatastoreSearchSql(props) {
       }
     }); // Set a limit of 100 rows as we don't need more for previewing...
 
-    sqlQueryString += " LIMIT 100"; // Build a datastore URL with SQL string
+    sqlQueryString += " ORDER BY \"_id\" ASC LIMIT 100"; // Build a datastore URL with SQL string
 
     var datastoreUrl = encodeURI(props.apiUrl + "datastore_search_sql?sql=".concat(sqlQueryString)); // Trigger Redux action
 

@@ -57,7 +57,7 @@ function DatastoreSearchSql(props) {
       }
     })
     // Set a limit of 100 rows as we don't need more for previewing...
-    sqlQueryString += ` LIMIT 100`
+    sqlQueryString += ` ORDER BY "_id" ASC LIMIT 100`
 
     // Build a datastore URL with SQL string
     const datastoreUrl = encodeURI(props.apiUrl + `datastore_search_sql?sql=${sqlQueryString}`)
