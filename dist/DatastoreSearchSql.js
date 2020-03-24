@@ -137,7 +137,9 @@ function DatastoreSearchSql(props) {
         className: "form-inline dq-main-container"
       }, _react.default.createElement("div", {
         className: "dq-heading"
-      }), dateField ? _react.default.createElement("div", null, _react.default.createElement(_reactDatePicker.default, {
+      }), dateField ? _react.default.createElement("div", {
+        className: "dq-date-picker"
+      }, _react.default.createElement(_reactDatePicker.default, {
         value: values.startDate,
         clearIcon: "X",
         onChange: function onChange(val) {
