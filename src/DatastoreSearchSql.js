@@ -88,7 +88,7 @@ function DatastoreSearchSql(props) {
         <Form className="form-inline dq-main-container">
           <div className="dq-heading"></div>
           {dateField ? (
-            <div>
+            <div className="dq-date-picker">
               <DatePicker
                 value={values.startDate}
                 clearIcon='X'
