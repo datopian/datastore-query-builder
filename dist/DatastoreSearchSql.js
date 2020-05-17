@@ -53,7 +53,7 @@ function DatastoreSearchSql(props) {
     var clonedValues = JSON.parse(JSON.stringify(values)); // Convert query to SQL string. Note we're adding 'COUNT(*) OVER()' so that
     // we get number of total rows info.
 
-    var sqlQueryString = "SELECT COUNT(*) OVER () AS _count, * FROM \"".concat(resource.id, "\" WHERE ");
+    var sqlQueryString = "SELECT COUNT(*) OVER () AS _count, * FROM \"".concat(resource.id, "\"");
 
     if (clonedValues.startDate) {
       var rule = {
@@ -81,7 +81,7 @@ function DatastoreSearchSql(props) {
 
       if (index === 0) {
         // TODO: unquote value for numbers
-        sqlQueryString += "\"".concat(rule.field, "\" ").concat(rule.operator, " '").concat(rule.value, "'");
+        sqlQueryString += " WHERE \"".concat(rule.field, "\" ").concat(rule.operator, " '").concat(rule.value, "'");
       } else {
         // If we have >1 rule we will need 'AND', 'OR' combinators
         sqlQueryString += " ".concat(rule.combinator.toUpperCase(), " \"").concat(rule.field, "\" ").concat(rule.operator, " '").concat(rule.value, "'");
