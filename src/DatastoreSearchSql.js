@@ -23,15 +23,6 @@ function DatastoreSearchSql(props) {
     {name: '>=', label: '>='}
   ]
 
-  function validate(values) {
-    const clonedValues = JSON.parse(JSON.stringify(values))
-    const errors = {}
-    if (!clonedValues.startDate && !clonedValues.endDate && clonedValues.rules.length === 0) { // No filters given so alert about that
-      errors.message = 'Please, provide at least one rule.'
-    }
-    return errors
-  }
-
   function handleSubmit(values) {
     const clonedValues = JSON.parse(JSON.stringify(values))
     // Convert query to SQL string. Note we're adding 'COUNT(*) OVER()' so that
@@ -57,7 +48,7 @@ function DatastoreSearchSql(props) {
       }
     })
     // Set a limit of 100 rows as we don't need more for previewing...
-    sqlQueryString += ` ORDER BY "_id" ASC LIMIT 100`
+    sqlQueryString += ` ORDER BY "${values.sort.fieldName}" ${values.sort.order} LIMIT 100`
 
     // Build a datastore URL with SQL string
     const datastoreUrl = encodeURI(props.apiUrl + `datastore_search_sql?sql=${sqlQueryString}`)
@@ -74,10 +65,7 @@ function DatastoreSearchSql(props) {
 
   return (
     <Formik
-      initialValues={{ rules: [], startDate: null, endDate: null }}
-      validate={values =>
-        validate(values)
-      }
+      initialValues={{ rules: [], startDate: null, endDate: null, sort: {fieldName: resource.schema.fields[0].name, order: 'DESC'} }}
       onSubmit={values =>
         handleSubmit(values)
       }
@@ -156,6 +144,15 @@ function DatastoreSearchSql(props) {
                 )}
                 </div>
                 <div className="dq-rule-submit dq-footer">
+                  <Field name={`sort.fieldName`} component="select" className="form-control">
+                    {resource.schema.fields.map((field, index) => (
+                      <option value={field.name} key={`field${index}`}>{field.title || field.name}</option>
+                    ))}
+                  </Field>
+                  <Field name={`sort.order`} component="select" className="form-control">
+                    <option value="DESC">Descending</option>
+                    <option value="ASC">Ascending</option>
+                  </Field>
                   <button type="submit" className="btn btn-primary submit-button">{t('Submit')}</button>
                   <button type="submit" className="btn btn-primary reset-button" onClick={handleReset}>{t('Reset')}</button>
                 </div>

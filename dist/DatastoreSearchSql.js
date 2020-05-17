@@ -49,18 +49,6 @@ function DatastoreSearchSql(props) {
     label: '>='
   }];
 
-  function _validate(values) {
-    var clonedValues = JSON.parse(JSON.stringify(values));
-    var errors = {};
-
-    if (!clonedValues.startDate && !clonedValues.endDate && clonedValues.rules.length === 0) {
-      // No filters given so alert about that
-      errors.message = 'Please, provide at least one rule.';
-    }
-
-    return errors;
-  }
-
   function handleSubmit(values) {
     var clonedValues = JSON.parse(JSON.stringify(values)); // Convert query to SQL string. Note we're adding 'COUNT(*) OVER()' so that
     // we get number of total rows info.
@@ -100,7 +88,7 @@ function DatastoreSearchSql(props) {
       }
     }); // Set a limit of 100 rows as we don't need more for previewing...
 
-    sqlQueryString += " ORDER BY \"_id\" ASC LIMIT 100"; // Build a datastore URL with SQL string
+    sqlQueryString += " ORDER BY \"".concat(values.sort.fieldName, "\" ").concat(values.sort.order, " LIMIT 100"); // Build a datastore URL with SQL string
 
     var datastoreUrl = encodeURI(props.apiUrl + "datastore_search_sql?sql=".concat(sqlQueryString)); // Trigger Redux action
 
@@ -118,10 +106,11 @@ function DatastoreSearchSql(props) {
     initialValues: {
       rules: [],
       startDate: null,
-      endDate: null
-    },
-    validate: function validate(values) {
-      return _validate(values);
+      endDate: null,
+      sort: {
+        fieldName: resource.schema.fields[0].name,
+        order: 'DESC'
+      }
     },
     onSubmit: function onSubmit(values) {
       return handleSubmit(values);
@@ -240,7 +229,24 @@ function DatastoreSearchSql(props) {
             }
           }, t('Add a rule'))), _react.default.createElement("div", {
             className: "dq-rule-submit dq-footer"
-          }, _react.default.createElement("button", {
+          }, _react.default.createElement(_formik.Field, {
+            name: "sort.fieldName",
+            component: "select",
+            className: "form-control"
+          }, resource.schema.fields.map(function (field, index) {
+            return _react.default.createElement("option", {
+              value: field.name,
+              key: "field".concat(index)
+            }, field.title || field.name);
+          })), _react.default.createElement(_formik.Field, {
+            name: "sort.order",
+            component: "select",
+            className: "form-control"
+          }, _react.default.createElement("option", {
+            value: "DESC"
+          }, "Descending"), _react.default.createElement("option", {
+            value: "ASC"
+          }, "Ascending")), _react.default.createElement("button", {
             type: "submit",
             className: "btn btn-primary submit-button"
           }, t('Submit')), _react.default.createElement("button", {
