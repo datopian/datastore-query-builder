@@ -157,7 +157,7 @@ function DatastoreSearchSql(props) {
         className: "dq-heading-main"
       }), _react.default.createElement("div", {
         className: "dq-heading-total-rows"
-      })), dateField ? _react.default.createElement("div", {
+      }, props.totalRows)), dateField ? _react.default.createElement("div", {
         className: "dq-date-picker"
       }, _react.default.createElement(_reactDatePicker.default, {
         value: values.startDate,

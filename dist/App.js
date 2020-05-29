@@ -38,7 +38,8 @@ var QueryBuilder = function QueryBuilder(props) {
     }, _react.default.createElement(_DatastoreSearchSql.default, {
       resource: resource,
       apiUrl: apiUrl,
-      action: props.filterBuilderAction
+      action: props.filterBuilderAction,
+      totalRows: props.totalRows
     }));
   } else {
     return _react.default.createElement("div", {

@@ -27,7 +27,9 @@ const filterBuilderAction = (resource) => {
   alert(JSON.stringify(resource))
 }
 
+const totalRows = 111
+
 export default {
   component: QueryBuilder,
-  props: {resource, filterBuilderAction}
+  props: {resource, filterBuilderAction, totalRows}
 };

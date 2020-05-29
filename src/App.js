@@ -24,6 +24,7 @@ export const QueryBuilder = (props) => {
           resource={resource}
           apiUrl={apiUrl}
           action={props.filterBuilderAction}
+          totalRows={props.totalRows}
         />
       </div>
     );
