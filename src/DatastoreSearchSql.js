@@ -1,12 +1,15 @@
 import "./i18n/i18n"
 
-import React from 'react';
+import React, { useState } from 'react';
 import {Formik, Form, FieldArray, Field} from 'formik'
 import DatePicker from 'react-date-picker'
+import {CopyToClipboard} from 'react-copy-to-clipboard'
 import {useTranslation} from "react-i18next"
 
 
 function DatastoreSearchSql(props) {
+  const [cleanedDatastoreUrl, setDatastoreUrl] = useState('')
+  const [copied, setCopied] = useState(false)
   const resource = JSON.parse(JSON.stringify(props.resource))
 
   const dateField = resource.schema.fields.find(field => field.type && field.type.includes('date'))
@@ -27,7 +30,8 @@ function DatastoreSearchSql(props) {
     const clonedValues = JSON.parse(JSON.stringify(values))
     // Convert query to SQL string. Note we're adding 'COUNT(*) OVER()' so that
     // we get number of total rows info.
-    let sqlQueryString = `SELECT COUNT(*) OVER () AS _count, * FROM "${resource.id}"`
+    const fieldNames = resource.schema.fields.map(field => field.name)
+    let sqlQueryString = `SELECT COUNT(*) OVER () AS _count, "${fieldNames.join('", "')}" FROM "${resource.id}"`
     if (clonedValues.startDate) {
       const rule = {combinator: 'AND', field: dateField.name, operator: '>=', value: clonedValues.startDate}
       clonedValues.rules.push(rule)
@@ -52,16 +56,18 @@ function DatastoreSearchSql(props) {
     sqlQueryString += ` ORDER BY "${values.sort.fieldName}" ${values.sort.order} LIMIT 100`
 
     // Build a datastore URL with SQL string
-    const datastoreUrl = encodeURI(props.apiUrl + `datastore_search_sql?sql=${sqlQueryString}`)
+    const datastoreUrl = props.apiUrl + `datastore_search_sql?sql=${sqlQueryString}`
     // Trigger Redux action
-    resource.api = datastoreUrl
+    resource.api = encodeURI(datastoreUrl)
     props.action(resource)
+    setDatastoreUrl(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', ''))
   }
 
   function handleReset() {
     // Initial api url should be `datastore_search` without any options.
     resource.api = props.apiUrl + `datastore_search?resource_id=${resource.id}&limit=100`
     props.action(resource)
+    setDatastoreUrl(resource.api)
   }
 
   return (
@@ -156,6 +162,9 @@ function DatastoreSearchSql(props) {
                   </Field>
                   <button type="submit" className="btn btn-primary submit-button">{t('Submit')}</button>
                   <button type="submit" className="btn btn-primary reset-button" onClick={handleReset}>{t('Reset')}</button>
+                  <CopyToClipboard text={cleanedDatastoreUrl} onCopy={() => setCopied(true)}>
+                    <button type="button" className="btn btn-primary copy-button">{copied ? "Copied" : "Copy API URI"}</button>
+                  </CopyToClipboard>
                 </div>
               </div>
             )}
