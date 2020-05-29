@@ -81,7 +81,10 @@ function DatastoreSearchSql(props) {
       }
       render={({ values, setFieldValue, handleReset }) => (
         <Form className="form-inline dq-main-container">
-          <div className="dq-heading"></div>
+          <div className="dq-heading">
+            <div className="dq-heading-main"></div>
+            <div className="dq-heading-total-rows"></div>
+          </div>
           {dateField ? (
             <div className="dq-date-picker">
               <DatePicker
