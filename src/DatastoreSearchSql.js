@@ -140,7 +140,7 @@ function DatastoreSearchSql(props) {
                       <button
                         type="button"
                         className="btn btn-default dq-btn-add"
-                        onClick={() => arrayHelpers.insert(index, {combinator: 'AND', field: otherFields[0].name, operator: '=', value: ''})} // insert an empty rule at a position
+                        onClick={() => arrayHelpers.insert(index + 1, {combinator: 'AND', field: otherFields[0].name, operator: '=', value: ''})} // insert an empty rule at a position
                       >
                         +
                       </button>

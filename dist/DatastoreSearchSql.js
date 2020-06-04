@@ -238,7 +238,7 @@ function DatastoreSearchSql(props) {
               type: "button",
               className: "btn btn-default dq-btn-add",
               onClick: function onClick() {
-                return arrayHelpers.insert(index, {
+                return arrayHelpers.insert(index + 1, {
                   combinator: 'AND',
                   field: otherFields[0].name,
                   operator: '=',
