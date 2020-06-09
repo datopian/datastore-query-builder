@@ -119,7 +119,24 @@ function DatastoreSearchSql(props) {
 
     resource.api = encodeURI(datastoreUrl);
     props.action(resource);
-    setDatastoreUrl(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', ''));
+    setDatastoreUrl(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', '')); // Update download links
+
+    var downloadCsvApiUri, downloadJsonApiUri;
+
+    if (props.apiUri) {
+      var uriObj = new URL(cleanedDatastoreUrl);
+
+      if (uriObj.pathname.split('/')[3] === 'datastore_search_sql') {
+        downloadJsonApiUri = "".concat(window.location.origin, "/download/datastore_search_sql").concat(uriObj.search);
+        uriObj.searchParams.set('format', 'csv');
+        downloadCsvApiUri = "".concat(window.location.origin, "/download/datastore_search_sql").concat(uriObj.search);
+        var ul = document.getElementById('downloads');
+        var csvLink = ul.children[0].children[0];
+        csvLink.setAttribute('href', downloadCsvApiUri);
+        var jsonLink = ul.children[2].children[0];
+        jsonLink.setAttribute('href', downloadJsonApiUri);
+      }
+    }
   }
 
   function handleReset() {
