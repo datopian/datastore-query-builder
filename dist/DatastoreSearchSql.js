@@ -87,6 +87,10 @@ function DatastoreSearchSql(props) {
         operator: '>=',
         value: clonedValues.startDate
       };
+      var localDateTime = new Date(clonedValues.startDate);
+      var offset = localDateTime.getTimezoneOffset();
+      localDateTime = new Date(localDateTime.getTime() - offset * 60 * 1000);
+      rule.value = localDateTime.toISOString();
       clonedValues.rules.push(rule);
     }
 
@@ -97,6 +101,13 @@ function DatastoreSearchSql(props) {
         operator: '<=',
         value: clonedValues.endDate
       };
+
+      var _localDateTime = new Date(clonedValues.endDate);
+
+      var _offset = _localDateTime.getTimezoneOffset();
+
+      _localDateTime = new Date(_localDateTime.getTime() - _offset * 60 * 1000);
+      _rule.value = _localDateTime.toISOString();
       clonedValues.rules.push(_rule);
     }
 
