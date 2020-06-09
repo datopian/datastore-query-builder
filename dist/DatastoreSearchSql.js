@@ -122,13 +122,10 @@ function DatastoreSearchSql(props) {
     setDatastoreUrl(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', '')); // Update download links
 
     var downloadCsvApiUri, downloadJsonApiUri;
-    var uriObj = new URL(cleanedDatastoreUrl);
-    console.log(cleanedDatastoreUrl);
+    var uriObj = new URL(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', ''));
     downloadJsonApiUri = "".concat(window.location.origin, "/download/datastore_search_sql").concat(uriObj.search);
     uriObj.searchParams.set('format', 'csv');
     downloadCsvApiUri = "".concat(window.location.origin, "/download/datastore_search_sql").concat(uriObj.search);
-    console.log(downloadJsonApiUri);
-    console.log(downloadCsvApiUri);
     var ul = document.getElementById('downloads');
     var csvLink = ul.children[0].children[0];
     csvLink.setAttribute('href', downloadCsvApiUri);

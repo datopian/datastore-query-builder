@@ -64,13 +64,10 @@ function DatastoreSearchSql(props) {
 
     // Update download links
     let downloadCsvApiUri, downloadJsonApiUri
-    let uriObj = new URL(cleanedDatastoreUrl)
-    console.log(cleanedDatastoreUrl)
+    let uriObj = new URL(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', ''))
     downloadJsonApiUri = `${window.location.origin}/download/datastore_search_sql${uriObj.search}`
     uriObj.searchParams.set('format', 'csv')
     downloadCsvApiUri = `${window.location.origin}/download/datastore_search_sql${uriObj.search}`
-    console.log(downloadJsonApiUri)
-    console.log(downloadCsvApiUri)
     const ul = document.getElementById('downloads')
     const csvLink = ul.children[0].children[0]
     csvLink.setAttribute('href', downloadCsvApiUri)
