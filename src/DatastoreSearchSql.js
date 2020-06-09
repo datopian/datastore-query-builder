@@ -64,19 +64,17 @@ function DatastoreSearchSql(props) {
 
     // Update download links
     let downloadCsvApiUri, downloadJsonApiUri
-    if (props.apiUri) {
-      let uriObj = new URL(cleanedDatastoreUrl)
-      if (uriObj.pathname.split('/')[3] === 'datastore_search_sql') {
-        downloadJsonApiUri = `${window.location.origin}/download/datastore_search_sql${uriObj.search}`
-        uriObj.searchParams.set('format', 'csv')
-        downloadCsvApiUri = `${window.location.origin}/download/datastore_search_sql${uriObj.search}`
+    let uriObj = new URL(cleanedDatastoreUrl)
+    if (uriObj.pathname.split('/')[3] === 'datastore_search_sql') {
+      downloadJsonApiUri = `${window.location.origin}/download/datastore_search_sql${uriObj.search}`
+      uriObj.searchParams.set('format', 'csv')
+      downloadCsvApiUri = `${window.location.origin}/download/datastore_search_sql${uriObj.search}`
 
-        const ul = document.getElementById('downloads')
-        const csvLink = ul.children[0].children[0]
-        csvLink.setAttribute('href', downloadCsvApiUri)
-        const jsonLink = ul.children[2].children[0]
-        jsonLink.setAttribute('href', downloadJsonApiUri)
-      }
+      const ul = document.getElementById('downloads')
+      const csvLink = ul.children[0].children[0]
+      csvLink.setAttribute('href', downloadCsvApiUri)
+      const jsonLink = ul.children[2].children[0]
+      jsonLink.setAttribute('href', downloadJsonApiUri)
     }
   }
 
