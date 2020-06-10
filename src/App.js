@@ -25,6 +25,7 @@ export const QueryBuilder = (props) => {
           apiUrl={apiUrl}
           action={props.filterBuilderAction}
           totalRows={props.totalRows}
+          alias={props.alias}
         />
       </div>
     );

@@ -39,7 +39,8 @@ var QueryBuilder = function QueryBuilder(props) {
       resource: resource,
       apiUrl: apiUrl,
       action: props.filterBuilderAction,
-      totalRows: props.totalRows
+      totalRows: props.totalRows,
+      alias: props.alias
     }));
   } else {
     return _react.default.createElement("div", {
