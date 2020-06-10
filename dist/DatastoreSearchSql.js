@@ -102,7 +102,10 @@ function DatastoreSearchSql(props) {
         value: clonedValues.endDate
       };
 
-      var _localDateTime = new Date(clonedValues.endDate);
+      var _localDateTime = new Date(clonedValues.endDate); // EDS specific: we want to exclude end date
+
+
+      _localDateTime = new Date(_localDateTime.setDate(_localDateTime.getDate() - 1)); // Now, convert it into GMT considering offset
 
       var _offset = _localDateTime.getTimezoneOffset();
 

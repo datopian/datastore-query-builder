@@ -43,6 +43,9 @@ function DatastoreSearchSql(props) {
     if (clonedValues.endDate) {
       const rule = {combinator: 'AND', field: dateField.name, operator: '<=', value: clonedValues.endDate}
       let localDateTime = new Date(clonedValues.endDate);
+      // EDS specific: we want to exclude end date
+      localDateTime = new Date(localDateTime.setDate(localDateTime.getDate() - 1));
+      // Now, convert it into GMT considering offset
       let offset = localDateTime.getTimezoneOffset();
       localDateTime = new Date(localDateTime.getTime() - offset * 60 * 1000);
       rule.value = localDateTime.toISOString();
