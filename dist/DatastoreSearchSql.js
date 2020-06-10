@@ -133,7 +133,8 @@ function DatastoreSearchSql(props) {
     setDatastoreUrl(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', '')); // Update download links
 
     var downloadCsvApiUri, downloadJsonApiUri;
-    var uriObj = new URL(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', ''));
+    var downloadUrl = datastoreUrl.replace('COUNT(*) OVER () AS _count, ', '').replace(' LIMIT 100', '');
+    var uriObj = new URL(downloadUrl);
     downloadJsonApiUri = "".concat(window.location.origin, "/download/datastore_search_sql").concat(uriObj.search);
     uriObj.searchParams.set('format', 'csv');
     downloadCsvApiUri = "".concat(window.location.origin, "/download/datastore_search_sql").concat(uriObj.search);
