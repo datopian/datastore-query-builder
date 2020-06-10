@@ -78,7 +78,7 @@ function DatastoreSearchSql(props) {
     var fieldNames = resource.schema.fields.map(function (field) {
       return field.name;
     });
-    var sqlQueryString = "SELECT COUNT(*) OVER () AS _count, \"".concat(fieldNames.join('", "'), "\" FROM \"").concat(props.alias, "\"");
+    var sqlQueryString = "SELECT COUNT(*) OVER () AS _count, \"".concat(fieldNames.join('", "'), "\" FROM \"").concat(resource.alias || resource.id, "\"");
 
     if (clonedValues.startDate) {
       var rule = {
@@ -147,7 +147,7 @@ function DatastoreSearchSql(props) {
 
   function handleReset() {
     // Initial api url should be `datastore_search` without any options.
-    resource.api = props.apiUrl + "datastore_search?resource_id=".concat(props.alias, "&limit=100");
+    resource.api = props.apiUrl + "datastore_search?resource_id=".concat(resource.alias || resource.id, "&limit=100");
     props.action(resource);
     setDatastoreUrl(resource.api);
   }

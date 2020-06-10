@@ -31,7 +31,7 @@ function DatastoreSearchSql(props) {
     // Convert query to SQL string. Note we're adding 'COUNT(*) OVER()' so that
     // we get number of total rows info.
     const fieldNames = resource.schema.fields.map(field => field.name)
-    let sqlQueryString = `SELECT COUNT(*) OVER () AS _count, "${fieldNames.join('", "')}" FROM "${props.alias}"`
+    let sqlQueryString = `SELECT COUNT(*) OVER () AS _count, "${fieldNames.join('", "')}" FROM "${resource.alias || resource.id}"`
     if (clonedValues.startDate) {
       const rule = {combinator: 'AND', field: dateField.name, operator: '>=', value: clonedValues.startDate}
       let localDateTime = new Date(clonedValues.startDate);
@@ -88,7 +88,7 @@ function DatastoreSearchSql(props) {
 
   function handleReset() {
     // Initial api url should be `datastore_search` without any options.
-    resource.api = props.apiUrl + `datastore_search?resource_id=${props.alias}&limit=100`
+    resource.api = props.apiUrl + `datastore_search?resource_id=${resource.alias || resource.id}&limit=100`
     props.action(resource)
     setDatastoreUrl(resource.api)
   }
