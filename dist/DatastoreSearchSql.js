@@ -138,6 +138,11 @@ function DatastoreSearchSql(props) {
     var downloadCsvApiUri, downloadJsonApiUri, downloadExcelApiUri;
     var downloadUrl = datastoreUrl.replace('COUNT(*) OVER () AS _count, ', '').replace(' LIMIT 100', '');
     var uriObj = new URL(downloadUrl);
+
+    if (resource.alias) {
+      uriObj.searchParams.set('alias', resource.alias);
+    }
+
     downloadJsonApiUri = "".concat(window.location.origin, "/download/datastore_search_sql").concat(uriObj.search);
     uriObj.searchParams.set('format', 'csv');
     downloadCsvApiUri = "".concat(window.location.origin, "/download/datastore_search_sql").concat(uriObj.search);

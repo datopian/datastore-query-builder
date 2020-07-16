@@ -79,6 +79,9 @@ function DatastoreSearchSql(props) {
       .replace('COUNT(*) OVER () AS _count, ', '')
       .replace(' LIMIT 100', '')
     let uriObj = new URL(downloadUrl)
+    if (resource.alias) {
+      uriObj.searchParams.set('alias', resource.alias)
+    }
     downloadJsonApiUri = `${window.location.origin}/download/datastore_search_sql${uriObj.search}`
     uriObj.searchParams.set('format', 'csv')
     downloadCsvApiUri = `${window.location.origin}/download/datastore_search_sql${uriObj.search}`
