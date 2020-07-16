@@ -135,17 +135,21 @@ function DatastoreSearchSql(props) {
     props.action(resource);
     setDatastoreUrl(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', '')); // Update download links
 
-    var downloadCsvApiUri, downloadJsonApiUri;
+    var downloadCsvApiUri, downloadJsonApiUri, downloadExcelApiUri;
     var downloadUrl = datastoreUrl.replace('COUNT(*) OVER () AS _count, ', '').replace(' LIMIT 100', '');
     var uriObj = new URL(downloadUrl);
     downloadJsonApiUri = "".concat(window.location.origin, "/download/datastore_search_sql").concat(uriObj.search);
     uriObj.searchParams.set('format', 'csv');
     downloadCsvApiUri = "".concat(window.location.origin, "/download/datastore_search_sql").concat(uriObj.search);
+    uriObj.searchParams.set('format', 'xlsx');
+    downloadExcelApiUri = "".concat(window.location.origin, "/download/datastore_search_sql").concat(uriObj.search);
     var ul = document.getElementById('downloads');
     var csvLink = ul.children[0].children[0];
     csvLink.setAttribute('href', downloadCsvApiUri);
     var jsonLink = ul.children[2].children[0];
     jsonLink.setAttribute('href', downloadJsonApiUri);
+    var excelLink = ul.children[4].children[0];
+    excelLink.setAttribute('href', downloadExcelApiUri);
   }
 
   function handleReset() {
