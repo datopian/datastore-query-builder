@@ -116,7 +116,7 @@ function DatastoreSearchSql(props) {
         <Form className="form-inline dq-main-container">
           <div className="dq-heading">
             <div className="dq-heading-main"></div>
-            <div className="dq-heading-total-rows">{props.totalRows}</div>
+            <div className="dq-heading-total-rows">{props.totalRows && props.totalRows.toLocaleString()}</div>
           </div>
           {dateField ? (
             <div className="dq-date-picker">
