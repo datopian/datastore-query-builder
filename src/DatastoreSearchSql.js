@@ -39,10 +39,20 @@ function DatastoreSearchSql(props) {
     let sqlQueryString = `SELECT COUNT(*) OVER () AS _count, * FROM "${resource.id}" WHERE `
     if (clonedValues.startDate) {
       const rule = {combinator: 'AND', field: dateField.name, operator: '>=', value: clonedValues.startDate}
+      let localDateTime = new Date(clonedValues.startDate);
+      // Now, convert it into GMT considering offset
+      let offset = localDateTime.getTimezoneOffset();
+      localDateTime = new Date(localDateTime.getTime() - offset * 60 * 1000);
+      rule.value = localDateTime.toISOString();
       clonedValues.rules.push(rule)
     }
     if (clonedValues.endDate) {
       const rule = {combinator: 'AND', field: dateField.name, operator: '<=', value: clonedValues.endDate}
+      let localDateTime = new Date(clonedValues.endDate);
+      // Now, convert it into GMT considering offset
+      let offset = localDateTime.getTimezoneOffset();
+      localDateTime = new Date(localDateTime.getTime() - offset * 60 * 1000);
+      rule.value = localDateTime.toISOString();
       clonedValues.rules.push(rule)
     }
 
