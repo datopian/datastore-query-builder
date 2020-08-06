@@ -12,7 +12,7 @@ function DatastoreSearchSql(props) {
   const [copied, setCopied] = useState(false)
   const resource = JSON.parse(JSON.stringify(props.resource))
 
-  const dateField = resource.schema.fields.find(field => field.type && field.type.includes('date'))
+  const dateFields = resource.schema.fields.filter(field => field.type && field.type.includes('date'))
   const otherFields = resource.schema.fields.filter(field => !(field.type && field.type.includes('date')))
 
   const { t } = useTranslation();
@@ -32,17 +32,17 @@ function DatastoreSearchSql(props) {
     // we get number of total rows info.
     const fieldNames = resource.schema.fields.map(field => field.name)
     let sqlQueryString = `SELECT COUNT(*) OVER () AS _count, "${fieldNames.join('", "')}" FROM "${resource.alias || resource.id}"`
-    if (clonedValues.startDate) {
-      const rule = {combinator: 'AND', field: dateField.name, operator: '>=', value: clonedValues.startDate}
-      let localDateTime = new Date(clonedValues.startDate);
+    if (clonedValues.date.startDate) {
+      const rule = {combinator: 'AND', field: clonedValues.date.fieldName, operator: '>=', value: clonedValues.date.startDate}
+      let localDateTime = new Date(clonedValues.date.startDate);
       let offset = localDateTime.getTimezoneOffset();
       localDateTime = new Date(localDateTime.getTime() - offset * 60 * 1000);
       rule.value = localDateTime.toISOString();
       clonedValues.rules.push(rule)
     }
-    if (clonedValues.endDate) {
-      const rule = {combinator: 'AND', field: dateField.name, operator: '<=', value: clonedValues.endDate}
-      let localDateTime = new Date(clonedValues.endDate);
+    if (clonedValues.date.endDate) {
+      const rule = {combinator: 'AND', field: clonedValues.date.fieldName, operator: '<=', value: clonedValues.date.endDate}
+      let localDateTime = new Date(clonedValues.date.endDate);
       // EDS specific: we want to exclude end date
       localDateTime = new Date(localDateTime.setDate(localDateTime.getDate() - 1));
       // Now, convert it into GMT considering offset
@@ -105,7 +105,7 @@ function DatastoreSearchSql(props) {
 
   return (
     <Formik
-      initialValues={{ rules: [], startDate: null, endDate: null, sort: {fieldName: resource.schema.fields[0].name, order: 'DESC'} }}
+      initialValues={{ rules: [], date: {startDate: null, endDate: null, fieldName: null}, sort: {fieldName: resource.schema.fields[0].name, order: 'DESC'} }}
       onSubmit={values =>
         handleSubmit(values)
       }
@@ -118,24 +118,26 @@ function DatastoreSearchSql(props) {
             <div className="dq-heading-main"></div>
             <div className="dq-heading-total-rows">{props.totalRows && parseInt(props.totalRows).toLocaleString()}</div>
           </div>
-          {dateField ? (
+          {dateFields ? (
             <div className="dq-date-picker">
+              <Field name={`date.fieldName`} component="select" className="form-control">
+                {dateFields.map((field, index) => (
+                  <option value={field.name} key={`dateField${index}`}>{field.title || field.name}</option>
+                ))}
+              </Field>
               <DatePicker
-                value={values.startDate}
+                value={values.date.startDate}
                 clearIcon='X'
                 onChange={val => setFieldValue(`startDate`, val)}
                 format='yyyy-MM-dd' />
               <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
               <DatePicker
-                  value={values.endDate}
+                  value={values.date.endDate}
                   clearIcon='X'
                   onChange={val => setFieldValue(`endDate`, val)}
                   returnValue='end'
                   format='yyyy-MM-dd'
-                  minDate={values.startDate} />
-                <div className="datetime-field-name" style={{display: 'none'}}>
-                  {dateField.title || dateField.name}
-                </div>
+                  minDate={values.date.startDate} />
             </div>
           ) : (
             ''
