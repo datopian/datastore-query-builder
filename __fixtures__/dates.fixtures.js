@@ -18,6 +18,10 @@ const resource = {
       {
         name: 'c',
         type: 'string'
+      },
+      {
+        name: 'd',
+        type: 'datetime'
       }
     ]
   }

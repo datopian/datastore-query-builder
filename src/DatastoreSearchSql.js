@@ -13,6 +13,7 @@ function DatastoreSearchSql(props) {
   const resource = JSON.parse(JSON.stringify(props.resource))
 
   const dateFields = resource.schema.fields.filter(field => field.type && field.type.includes('date'))
+  const defaultDateFieldName = dateFields.length > 0 ? dateFields[0].name : null
   const otherFields = resource.schema.fields.filter(field => !(field.type && field.type.includes('date')))
 
   const { t } = useTranslation();
@@ -105,7 +106,7 @@ function DatastoreSearchSql(props) {
 
   return (
     <Formik
-      initialValues={{ rules: [], date: {startDate: null, endDate: null, fieldName: null}, sort: {fieldName: resource.schema.fields[0].name, order: 'DESC'} }}
+      initialValues={{ rules: [], date: {startDate: null, endDate: null, fieldName: defaultDateFieldName}, sort: {fieldName: resource.schema.fields[0].name, order: 'DESC'} }}
       onSubmit={values =>
         handleSubmit(values)
       }
@@ -118,7 +119,7 @@ function DatastoreSearchSql(props) {
             <div className="dq-heading-main"></div>
             <div className="dq-heading-total-rows">{props.totalRows && parseInt(props.totalRows).toLocaleString()}</div>
           </div>
-          {dateFields ? (
+          {defaultDateFieldName ? (
             <div className="dq-date-picker">
               <Field name={`date.fieldName`} component="select" className="form-control">
                 {dateFields.map((field, index) => (

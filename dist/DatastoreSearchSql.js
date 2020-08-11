@@ -44,6 +44,7 @@ function DatastoreSearchSql(props) {
   var dateFields = resource.schema.fields.filter(function (field) {
     return field.type && field.type.includes('date');
   });
+  var defaultDateFieldName = dateFields.length > 0 ? dateFields[0].name : null;
   var otherFields = resource.schema.fields.filter(function (field) {
     return !(field.type && field.type.includes('date'));
   });
@@ -170,7 +171,7 @@ function DatastoreSearchSql(props) {
       date: {
         startDate: null,
         endDate: null,
-        fieldName: null
+        fieldName: defaultDateFieldName
       },
       sort: {
         fieldName: resource.schema.fields[0].name,
@@ -195,7 +196,7 @@ function DatastoreSearchSql(props) {
         className: "dq-heading-main"
       }), _react.default.createElement("div", {
         className: "dq-heading-total-rows"
-      }, props.totalRows && parseInt(props.totalRows).toLocaleString())), dateFields ? _react.default.createElement("div", {
+      }, props.totalRows && parseInt(props.totalRows).toLocaleString())), defaultDateFieldName ? _react.default.createElement("div", {
         className: "dq-date-picker"
       }, _react.default.createElement(_formik.Field, {
         name: "date.fieldName",
