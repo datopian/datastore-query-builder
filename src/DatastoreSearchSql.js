@@ -128,13 +128,13 @@ function DatastoreSearchSql(props) {
               <DatePicker
                 value={values.date.startDate}
                 clearIcon='X'
-                onChange={val => setFieldValue(`startDate`, val)}
+                onChange={val => setFieldValue(`date.startDate`, val)}
                 format='yyyy-MM-dd' />
               <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
               <DatePicker
                   value={values.date.endDate}
                   clearIcon='X'
-                  onChange={val => setFieldValue(`endDate`, val)}
+                  onChange={val => setFieldValue(`date.endDate`, val)}
                   returnValue='end'
                   format='yyyy-MM-dd'
                   minDate={values.date.startDate} />

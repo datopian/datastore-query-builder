@@ -210,7 +210,7 @@ function DatastoreSearchSql(props) {
         value: values.date.startDate,
         clearIcon: "X",
         onChange: function onChange(val) {
-          return setFieldValue("startDate", val);
+          return setFieldValue("date.startDate", val);
         },
         format: "yyyy-MM-dd"
       }), _react.default.createElement("i", {
@@ -220,7 +220,7 @@ function DatastoreSearchSql(props) {
         value: values.date.endDate,
         clearIcon: "X",
         onChange: function onChange(val) {
-          return setFieldValue("endDate", val);
+          return setFieldValue("date.endDate", val);
         },
         returnValue: "end",
         format: "yyyy-MM-dd",
