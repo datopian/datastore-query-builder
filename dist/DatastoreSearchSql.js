@@ -13,13 +13,17 @@ var _formik = require("formik");
 
 var _reactDatePicker = _interopRequireDefault(require("react-date-picker"));
 
-var _reactCopyToClipboard = require("react-copy-to-clipboard");
+var _copyToClipboard = _interopRequireDefault(require("copy-to-clipboard"));
 
 var _reactI18next = require("react-i18next");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
@@ -30,15 +34,10 @@ function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function DatastoreSearchSql(props) {
-  var _useState = (0, _react.useState)(''),
+  var _useState = (0, _react.useState)(false),
       _useState2 = _slicedToArray(_useState, 2),
-      cleanedDatastoreUrl = _useState2[0],
-      setDatastoreUrl = _useState2[1];
-
-  var _useState3 = (0, _react.useState)(false),
-      _useState4 = _slicedToArray(_useState3, 2),
-      copied = _useState4[0],
-      setCopied = _useState4[1];
+      copied = _useState2[0],
+      setCopied = _useState2[1];
 
   var resource = JSON.parse(JSON.stringify(props.resource));
   var dateFields = resource.schema.fields.filter(function (field) {
@@ -72,7 +71,7 @@ function DatastoreSearchSql(props) {
     label: '>='
   }];
 
-  function handleSubmit(values) {
+  function handleSubmit(values, action) {
     var clonedValues = JSON.parse(JSON.stringify(values)); // Convert query to SQL string. Note we're adding 'COUNT(*) OVER()' so that
     // we get number of total rows info.
 
@@ -133,8 +132,15 @@ function DatastoreSearchSql(props) {
     var datastoreUrl = props.apiUrl + "datastore_search_sql?sql=".concat(sqlQueryString); // Trigger Redux action
 
     resource.api = encodeURI(datastoreUrl);
-    props.action(resource);
-    setDatastoreUrl(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', '')); // Update download links
+
+    if (action === 'SUBMIT') {
+      props.action(resource);
+    }
+
+    if (action === 'COPY') {
+      (0, _copyToClipboard.default)(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', ''));
+    } // Update download links
+
 
     var downloadCsvApiUri, downloadJsonApiUri, downloadExcelApiUri;
     var downloadUrl = datastoreUrl.replace('COUNT(*) OVER () AS _count, ', '').replace(' LIMIT 100', '');
@@ -162,7 +168,6 @@ function DatastoreSearchSql(props) {
     // Initial api url should be `datastore_search` without any options.
     resource.api = props.apiUrl + "datastore_search?resource_id=".concat(resource.alias || resource.id, "&limit=100");
     props.action(resource);
-    setDatastoreUrl(resource.api);
   }
 
   return _react.default.createElement(_formik.Formik, {
@@ -179,7 +184,9 @@ function DatastoreSearchSql(props) {
       }
     },
     onSubmit: function onSubmit(values) {
-      return handleSubmit(values);
+      var Action = values.ACTION;
+      delete values.ACTION;
+      handleSubmit(values, Action || 'SUBMIT');
     },
     onReset: function onReset() {
       return handleReset();
@@ -187,7 +194,8 @@ function DatastoreSearchSql(props) {
     render: function render(_ref) {
       var values = _ref.values,
           setFieldValue = _ref.setFieldValue,
-          handleReset = _ref.handleReset;
+          handleReset = _ref.handleReset,
+          handleSubmit = _ref.handleSubmit;
       return _react.default.createElement(_formik.Form, {
         className: "form-inline dq-main-container"
       }, _react.default.createElement("div", {
@@ -327,15 +335,33 @@ function DatastoreSearchSql(props) {
             type: "submit",
             className: "btn btn-primary reset-button",
             onClick: handleReset
-          }, t('Reset')), _react.default.createElement(_reactCopyToClipboard.CopyToClipboard, {
-            text: cleanedDatastoreUrl,
-            onCopy: function onCopy() {
-              return setCopied(true);
-            }
-          }, _react.default.createElement("button", {
+          }, t('Reset')), _react.default.createElement("button", {
             type: "button",
-            className: "btn btn-primary copy-button"
-          }, copied ? "Copied" : "Copy API URI"))));
+            className: "btn btn-primary copy-button",
+            onClick:
+            /*#__PURE__*/
+            _asyncToGenerator(
+            /*#__PURE__*/
+            regeneratorRuntime.mark(function _callee() {
+              return regeneratorRuntime.wrap(function _callee$(_context) {
+                while (1) {
+                  switch (_context.prev = _context.next) {
+                    case 0:
+                      _context.next = 2;
+                      return setFieldValue('ACTION', 'COPY');
+
+                    case 2:
+                      handleSubmit();
+                      setCopied(true);
+
+                    case 4:
+                    case "end":
+                      return _context.stop();
+                  }
+                }
+              }, _callee);
+            }))
+          }, copied ? "Copied" : "Copy API URI")));
         }
       }));
     }
