@@ -3,7 +3,7 @@ import "./i18n/i18n"
 import React, { useState } from 'react';
 import {Formik, Form, FieldArray, Field} from 'formik'
 import DatePicker from 'react-date-picker'
-import copy from 'copy-to-clipboard';
+import copy from 'copy-to-clipboard'
 import {useTranslation} from "react-i18next"
 
 
@@ -75,7 +75,9 @@ function DatastoreSearchSql(props) {
       props.action(resource)
     } 
 
-    copy(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', ''))
+    if (action === 'COPY') {
+      copy(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', ''))
+    } 
 
     // Update download links
     let downloadCsvApiUri, downloadJsonApiUri, downloadExcelApiUri
@@ -208,7 +210,7 @@ function DatastoreSearchSql(props) {
                   <button type="submit" className="btn btn-primary reset-button" onClick={handleReset}>{t('Reset')}</button>
                   <button type="button" className="btn btn-primary copy-button" onClick={ async()=> {
                     await setFieldValue('ACTION', 'COPY')
-                    handleSubmit();
+                    handleSubmit()
                     setCopied(true)
                   }}>{copied ? "Copied" : "Copy API URI"}</button>
                 </div>
