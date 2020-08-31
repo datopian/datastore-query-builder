@@ -3,12 +3,11 @@ import "./i18n/i18n"
 import React, { useState } from 'react';
 import {Formik, Form, FieldArray, Field} from 'formik'
 import DatePicker from 'react-date-picker'
-import {CopyToClipboard} from 'react-copy-to-clipboard'
+import copy from 'copy-to-clipboard';
 import {useTranslation} from "react-i18next"
 
 
 function DatastoreSearchSql(props) {
-  const [cleanedDatastoreUrl, setDatastoreUrl] = useState('')
   const [copied, setCopied] = useState(false)
   const resource = JSON.parse(JSON.stringify(props.resource))
 
@@ -27,7 +26,7 @@ function DatastoreSearchSql(props) {
     {name: '>=', label: '>='}
   ]
 
-  function handleSubmit(values) {
+  function handleSubmit(values, action) {
     const clonedValues = JSON.parse(JSON.stringify(values))
     // Convert query to SQL string. Note we're adding 'COUNT(*) OVER()' so that
     // we get number of total rows info.
@@ -71,8 +70,12 @@ function DatastoreSearchSql(props) {
     const datastoreUrl = props.apiUrl + `datastore_search_sql?sql=${sqlQueryString}`
     // Trigger Redux action
     resource.api = encodeURI(datastoreUrl)
-    props.action(resource)
-    setDatastoreUrl(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', ''))
+
+    if (action === 'SUBMIT') {
+      props.action(resource)
+    } 
+
+    copy(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', ''))
 
     // Update download links
     let downloadCsvApiUri, downloadJsonApiUri, downloadExcelApiUri
@@ -101,19 +104,21 @@ function DatastoreSearchSql(props) {
     // Initial api url should be `datastore_search` without any options.
     resource.api = props.apiUrl + `datastore_search?resource_id=${resource.alias || resource.id}&limit=100`
     props.action(resource)
-    setDatastoreUrl(resource.api)
   }
 
   return (
     <Formik
       initialValues={{ rules: [], date: {startDate: null, endDate: null, fieldName: defaultDateFieldName}, sort: {fieldName: resource.schema.fields[0].name, order: 'DESC'} }}
-      onSubmit={values =>
-        handleSubmit(values)
-      }
+      onSubmit={values =>{
+        const Action = values.ACTION 
+        delete values.ACTION;  
+        handleSubmit(values, Action || 'SUBMIT')
+      }}
+      
       onReset={() =>
         handleReset()
       }
-      render={({ values, setFieldValue, handleReset }) => (
+      render={({ values, setFieldValue, handleReset, handleSubmit }) => (
         <Form className="form-inline dq-main-container">
           <div className="dq-heading">
             <div className="dq-heading-main"></div>
@@ -201,9 +206,11 @@ function DatastoreSearchSql(props) {
                   </Field>
                   <button type="submit" className="btn btn-primary submit-button">{t('Submit')}</button>
                   <button type="submit" className="btn btn-primary reset-button" onClick={handleReset}>{t('Reset')}</button>
-                  <CopyToClipboard text={cleanedDatastoreUrl} onCopy={() => setCopied(true)}>
-                    <button type="button" className="btn btn-primary copy-button">{copied ? "Copied" : "Copy API URI"}</button>
-                  </CopyToClipboard>
+                  <button type="button" className="btn btn-primary copy-button" onClick={ async()=> {
+                    await setFieldValue('ACTION', 'COPY')
+                    handleSubmit();
+                    setCopied(true)
+                  }}>{copied ? "Copied" : "Copy API URI"}</button>
                 </div>
               </div>
             )}
