@@ -32,7 +32,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function DatastoreSearchSql(props) {
   var resource = JSON.parse(JSON.stringify(props.resource));
 
-  var _useState = (0, _react.useState)(resource.proxy || resource.api || ''),
+  var _useState = (0, _react.useState)(resource.api || ''),
       _useState2 = _slicedToArray(_useState, 2),
       cleanedDatastoreUrl = _useState2[0],
       setDatastoreUrl = _useState2[1];
@@ -135,7 +135,8 @@ function DatastoreSearchSql(props) {
 
     resource.api = encodeURI(datastoreUrl);
     props.action(resource);
-    setDatastoreUrl(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', '')); // Update download links
+    setDatastoreUrl(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', ''));
+    setCopied(false); // Update download links
 
     var downloadCsvApiUri, downloadJsonApiUri, downloadExcelApiUri;
     var downloadUrl = datastoreUrl.replace('COUNT(*) OVER () AS _count, ', '').replace(' LIMIT 100', '');
@@ -160,10 +161,10 @@ function DatastoreSearchSql(props) {
   }
 
   function handleReset() {
-    // Initial api url should be `datastore_search` without any options.
-    resource.api = props.apiUrl + "datastore_search?resource_id=".concat(resource.alias || resource.id, "&limit=100");
+    resource.api = props.initialApiUrl;
     props.action(resource);
     setDatastoreUrl(resource.api);
+    setCopied(false);
   }
 
   return _react.default.createElement(_formik.Formik, {

@@ -74,6 +74,7 @@ function DatastoreSearchSql(props) {
     resource.api = encodeURI(datastoreUrl)
     props.action(resource)
     setDatastoreUrl(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', ''))
+    setCopied(false)
 
     // Update download links
     let downloadCsvApiUri, downloadJsonApiUri, downloadExcelApiUri
@@ -102,6 +103,7 @@ function DatastoreSearchSql(props) {
     resource.api = props.initialApiUrl
     props.action(resource)
     setDatastoreUrl(resource.api)
+    setCopied(false)
   }
 
   return (
