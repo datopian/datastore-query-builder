@@ -8,9 +8,10 @@ import {useTranslation} from "react-i18next"
 
 
 function DatastoreSearchSql(props) {
-  const [cleanedDatastoreUrl, setDatastoreUrl] = useState('')
-  const [copied, setCopied] = useState(false)
   const resource = JSON.parse(JSON.stringify(props.resource))
+
+  const [cleanedDatastoreUrl, setDatastoreUrl] = useState(resource.proxy || resource.api || '')
+  const [copied, setCopied] = useState(false)
 
   const dateFields = resource.schema.fields.filter(field => field.type && field.type.includes('date'))
   const defaultDateFieldName = dateFields.length > 0 ? dateFields[0].name : null

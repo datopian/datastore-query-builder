@@ -30,7 +30,9 @@ function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function DatastoreSearchSql(props) {
-  var _useState = (0, _react.useState)(''),
+  var resource = JSON.parse(JSON.stringify(props.resource));
+
+  var _useState = (0, _react.useState)(resource.proxy || resource.api || ''),
       _useState2 = _slicedToArray(_useState, 2),
       cleanedDatastoreUrl = _useState2[0],
       setDatastoreUrl = _useState2[1];
@@ -40,7 +42,6 @@ function DatastoreSearchSql(props) {
       copied = _useState4[0],
       setCopied = _useState4[1];
 
-  var resource = JSON.parse(JSON.stringify(props.resource));
   var dateFields = resource.schema.fields.filter(function (field) {
     return field.type && field.type.includes('date');
   });
