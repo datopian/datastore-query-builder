@@ -10,7 +10,7 @@ import {useTranslation} from "react-i18next"
 function DatastoreSearchSql(props) {
   const resource = JSON.parse(JSON.stringify(props.resource))
 
-  const [cleanedDatastoreUrl, setDatastoreUrl] = useState(resource.proxy || resource.api || '')
+  const [cleanedDatastoreUrl, setDatastoreUrl] = useState(resource.api || '')
   const [copied, setCopied] = useState(false)
 
   const dateFields = resource.schema.fields.filter(field => field.type && field.type.includes('date'))
@@ -99,8 +99,7 @@ function DatastoreSearchSql(props) {
   }
 
   function handleReset() {
-    // Initial api url should be `datastore_search` without any options.
-    resource.api = props.apiUrl + `datastore_search?resource_id=${resource.alias || resource.id}&limit=100`
+    resource.api = props.initialApiUrl
     props.action(resource)
     setDatastoreUrl(resource.api)
   }
