@@ -5,13 +5,14 @@ import {Formik, Form, FieldArray, Field} from 'formik'
 import DatePicker from 'react-date-picker'
 import {CopyToClipboard} from 'react-copy-to-clipboard'
 import {useTranslation} from "react-i18next"
+import ReactTooltip from "react-tooltip"
 
 
 function DatastoreSearchSql(props) {
   const resource = JSON.parse(JSON.stringify(props.resource))
 
   const [cleanedDatastoreUrl, setDatastoreUrl] = useState(resource.api || '')
-  const [copied, setCopied] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
 
   const dateFields = resource.schema.fields.filter(field => field.type && field.type.includes('date'))
   const defaultDateFieldName = dateFields.length > 0 ? dateFields[0].name : null
@@ -74,7 +75,6 @@ function DatastoreSearchSql(props) {
     resource.api = encodeURI(datastoreUrl)
     props.action(resource)
     setDatastoreUrl(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', ''))
-    setCopied(false)
 
     // Update download links
     let downloadCsvApiUri, downloadJsonApiUri, downloadExcelApiUri
@@ -90,20 +90,29 @@ function DatastoreSearchSql(props) {
     downloadCsvApiUri = `${window.location.origin}/download/datastore_search_sql${uriObj.search}`
     uriObj.searchParams.set('format', 'xlsx')
     downloadExcelApiUri = `${window.location.origin}/download/datastore_search_sql${uriObj.search}`
-    const ul = document.getElementById('downloads')
-    const csvLink = ul.children[0].children[0]
-    csvLink.setAttribute('href', downloadCsvApiUri)
-    const jsonLink = ul.children[2].children[0]
-    jsonLink.setAttribute('href', downloadJsonApiUri)
-    const excelLink = ul.children[4].children[0]
-    excelLink.setAttribute('href', downloadExcelApiUri)
+
+    // TODO: uncomment after test
+    // const ul = document.getElementById('downloads')
+    // const csvLink = ul.children[0].children[0]
+    // csvLink.setAttribute('href', downloadCsvApiUri)
+    // const jsonLink = ul.children[2].children[0]
+    // jsonLink.setAttribute('href', downloadJsonApiUri)
+    // const excelLink = ul.children[4].children[0]
+    // excelLink.setAttribute('href', downloadExcelApiUri)
+
+    setSubmitted(true)
   }
 
   function handleReset() {
     resource.api = props.initialApiUrl
     props.action(resource)
     setDatastoreUrl(resource.api)
-    setCopied(false)
+    setSubmitted(false)
+  }
+
+  function handleChange() {
+    setSubmitted(false)
+    console.log("onChange submitted: " + submitted)
   }
 
   return (
@@ -115,8 +124,12 @@ function DatastoreSearchSql(props) {
       onReset={() =>
         handleReset()
       }
-      render={({ values, setFieldValue, handleReset }) => (
+
+      onChange={handleChange}
+      render={({ values, touched, isSubmitting, setFieldValue, handleReset }) => (
         <Form className="form-inline dq-main-container">
+          {console.log("Touched: " + JSON.stringify(touched))}
+          {console.log("isSubmitting: " + JSON.stringify(isSubmitting))}
           <div className="dq-heading">
             <div className="dq-heading-main"></div>
             <div className="dq-heading-total-rows">{props.totalRows && parseInt(props.totalRows).toLocaleString()}</div>
@@ -124,7 +137,8 @@ function DatastoreSearchSql(props) {
           {defaultDateFieldName ? (
             <div className="dq-date-picker">
               <Field name={`date.fieldName`} component="select" className="form-control">
-                {dateFields.map((field, index) => (
+                {dateFields.map((field, index, onChange) => (
+
                   <option value={field.name} key={`dateField${index}`}>{field.title || field.name}</option>
                 ))}
               </Field>
@@ -203,8 +217,16 @@ function DatastoreSearchSql(props) {
                   </Field>
                   <button type="submit" className="btn btn-primary submit-button">{t('Submit')}</button>
                   <button type="submit" className="btn btn-primary reset-button" onClick={handleReset}>{t('Reset')}</button>
-                  <CopyToClipboard text={cleanedDatastoreUrl} onCopy={() => setCopied(true)}>
-                    <button type="button" className="btn btn-primary copy-button">{copied ? "Copied" : "Copy API URI"}</button>
+                  <CopyToClipboard text={cleanedDatastoreUrl}>
+                    <div data-tip={t("Submit to enable")}>
+                      <button type="button"
+                              disabled={!submitted}
+                              className="btn btn-primary copy-button">
+                        {t("Copy API URI")}
+                      </button>
+                      {!submitted ? <ReactTooltip /> : "" }
+                    </div>
+
                   </CopyToClipboard>
                 </div>
               </div>
