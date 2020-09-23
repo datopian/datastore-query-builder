@@ -12,7 +12,7 @@ function DatastoreSearchSql(props) {
   const resource = JSON.parse(JSON.stringify(props.resource))
 
   const [cleanedDatastoreUrl, setDatastoreUrl] = useState(resource.api || '')
-  const [submitted, setSubmitted] = useState(false)
+  const [canCopyUri, setCanCopyUri] = useState(true)
 
   const dateFields = resource.schema.fields.filter(field => field.type && field.type.includes('date'))
   const defaultDateFieldName = dateFields.length > 0 ? dateFields[0].name : null
@@ -91,28 +91,26 @@ function DatastoreSearchSql(props) {
     uriObj.searchParams.set('format', 'xlsx')
     downloadExcelApiUri = `${window.location.origin}/download/datastore_search_sql${uriObj.search}`
 
-    // TODO: uncomment after test
-    // const ul = document.getElementById('downloads')
-    // const csvLink = ul.children[0].children[0]
-    // csvLink.setAttribute('href', downloadCsvApiUri)
-    // const jsonLink = ul.children[2].children[0]
-    // jsonLink.setAttribute('href', downloadJsonApiUri)
-    // const excelLink = ul.children[4].children[0]
-    // excelLink.setAttribute('href', downloadExcelApiUri)
+    const ul = document.getElementById('downloads')
+    const csvLink = ul.children[0].children[0]
+    csvLink.setAttribute('href', downloadCsvApiUri)
+    const jsonLink = ul.children[2].children[0]
+    jsonLink.setAttribute('href', downloadJsonApiUri)
+    const excelLink = ul.children[4].children[0]
+    excelLink.setAttribute('href', downloadExcelApiUri)
 
-    setSubmitted(true)
+    setCanCopyUri(true)
   }
 
   function handleReset() {
     resource.api = props.initialApiUrl
     props.action(resource)
     setDatastoreUrl(resource.api)
-    setSubmitted(false)
+    setCanCopyUri(true)
   }
 
   function handleChange() {
-    setSubmitted(false)
-    console.log("onChange submitted: " + submitted)
+    setCanCopyUri(false)
   }
 
   return (
@@ -124,12 +122,8 @@ function DatastoreSearchSql(props) {
       onReset={() =>
         handleReset()
       }
-
-      onChange={handleChange}
-      render={({ values, touched, isSubmitting, setFieldValue, handleReset }) => (
-        <Form className="form-inline dq-main-container">
-          {console.log("Touched: " + JSON.stringify(touched))}
-          {console.log("isSubmitting: " + JSON.stringify(isSubmitting))}
+      render={({ values, setFieldValue, handleReset }) => (
+        <Form className="form-inline dq-main-container" onChange={handleChange}>
           <div className="dq-heading">
             <div className="dq-heading-main"></div>
             <div className="dq-heading-total-rows">{props.totalRows && parseInt(props.totalRows).toLocaleString()}</div>
@@ -137,24 +131,29 @@ function DatastoreSearchSql(props) {
           {defaultDateFieldName ? (
             <div className="dq-date-picker">
               <Field name={`date.fieldName`} component="select" className="form-control">
-                {dateFields.map((field, index, onChange) => (
-
+                {dateFields.map((field, index) => (
                   <option value={field.name} key={`dateField${index}`}>{field.title || field.name}</option>
                 ))}
               </Field>
               <DatePicker
                 value={values.date.startDate}
                 clearIcon='X'
-                onChange={val => setFieldValue(`date.startDate`, val)}
+                onChange={val => {
+                  setFieldValue(`date.startDate`, val)
+                  handleChange()
+                }}
                 format='yyyy-MM-dd' />
               <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
               <DatePicker
-                  value={values.date.endDate}
-                  clearIcon='X'
-                  onChange={val => setFieldValue(`date.endDate`, val)}
-                  returnValue='end'
-                  format='yyyy-MM-dd'
-                  minDate={values.date.startDate} />
+                value={values.date.endDate}
+                clearIcon='X'
+                onChange={val => {
+                  setFieldValue(`date.endDate`, val)
+                  handleChange()
+                }}
+                returnValue='end'
+                format='yyyy-MM-dd'
+                minDate={values.date.startDate} />
             </div>
           ) : (
             ''
@@ -185,21 +184,33 @@ function DatastoreSearchSql(props) {
                       <button
                         type="button"
                         className="btn btn-default dq-btn-remove"
-                        onClick={() => arrayHelpers.remove(index)} // remove a rule from the list
+                        onClick={() => {
+                          // remove a rule from the list
+                          arrayHelpers.remove(index)
+                          handleChange()
+                        }}
                       >
                         -
                       </button>
                       <button
                         type="button"
                         className="btn btn-default dq-btn-add"
-                        onClick={() => arrayHelpers.insert(index + 1, {combinator: 'AND', field: otherFields[0].name, operator: '=', value: ''})} // insert an empty rule at a position
+                        onClick={() => {
+                          // insert an empty rule at a position
+                          arrayHelpers.insert(index + 1, {combinator: 'AND', field: otherFields[0].name, operator: '=', value: ''})
+                          handleChange()
+                        }}
                       >
                         +
                       </button>
                     </div>
                   ))
                 ) : (
-                  <button type="button" className="btn btn-default dq-rule-add" onClick={() => arrayHelpers.push({combinator: 'AND', field: otherFields[0].name, operator: '=', value: ''})}>
+                  <button type="button" className="btn btn-default dq-rule-add" onClick={
+                    () => {
+                      arrayHelpers.push({combinator: 'AND', field: otherFields[0].name, operator: '=', value: ''})
+                      handleChange()
+                    }}>
                     {/* show this when user has removed all rules from the list */}
                     {t('Add a rule')}
                   </button>
@@ -220,11 +231,11 @@ function DatastoreSearchSql(props) {
                   <CopyToClipboard text={cleanedDatastoreUrl}>
                     <div data-tip={t("Submit to enable")}>
                       <button type="button"
-                              disabled={!submitted}
+                              disabled={!canCopyUri}
                               className="btn btn-primary copy-button">
                         {t("Copy API URI")}
                       </button>
-                      {!submitted ? <ReactTooltip /> : "" }
+                      {!canCopyUri ? <ReactTooltip /> : "" }
                     </div>
 
                   </CopyToClipboard>
