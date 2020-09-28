@@ -17,6 +17,8 @@ var _reactCopyToClipboard = require("react-copy-to-clipboard");
 
 var _reactI18next = require("react-i18next");
 
+var _reactTooltip = _interopRequireDefault(require("react-tooltip"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
@@ -37,10 +39,10 @@ function DatastoreSearchSql(props) {
       cleanedDatastoreUrl = _useState2[0],
       setDatastoreUrl = _useState2[1];
 
-  var _useState3 = (0, _react.useState)(false),
+  var _useState3 = (0, _react.useState)(true),
       _useState4 = _slicedToArray(_useState3, 2),
-      copied = _useState4[0],
-      setCopied = _useState4[1];
+      canCopyUri = _useState4[0],
+      setCanCopyUri = _useState4[1];
 
   var dateFields = resource.schema.fields.filter(function (field) {
     return field.type && field.type.includes('date');
@@ -135,8 +137,7 @@ function DatastoreSearchSql(props) {
 
     resource.api = encodeURI(datastoreUrl);
     props.action(resource);
-    setDatastoreUrl(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', ''));
-    setCopied(false); // Update download links
+    setDatastoreUrl(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', '')); // Update download links
 
     var downloadCsvApiUri, downloadJsonApiUri, downloadExcelApiUri;
     var downloadUrl = datastoreUrl.replace('COUNT(*) OVER () AS _count, ', '').replace(' LIMIT 100', '');
@@ -158,13 +159,18 @@ function DatastoreSearchSql(props) {
     jsonLink.setAttribute('href', downloadJsonApiUri);
     var excelLink = ul.children[4].children[0];
     excelLink.setAttribute('href', downloadExcelApiUri);
+    setCanCopyUri(true);
   }
 
   function handleReset() {
     resource.api = props.initialApiUrl;
     props.action(resource);
     setDatastoreUrl(resource.api);
-    setCopied(false);
+    setCanCopyUri(true);
+  }
+
+  function handleChange() {
+    setCanCopyUri(false);
   }
 
   return _react.default.createElement(_formik.Formik, {
@@ -191,7 +197,8 @@ function DatastoreSearchSql(props) {
           setFieldValue = _ref.setFieldValue,
           handleReset = _ref.handleReset;
       return _react.default.createElement(_formik.Form, {
-        className: "form-inline dq-main-container"
+        className: "form-inline dq-main-container",
+        onChange: handleChange
       }, _react.default.createElement("div", {
         className: "dq-heading"
       }, _react.default.createElement("div", {
@@ -213,7 +220,8 @@ function DatastoreSearchSql(props) {
         value: values.date.startDate,
         clearIcon: "X",
         onChange: function onChange(val) {
-          return setFieldValue("date.startDate", val);
+          setFieldValue("date.startDate", val);
+          handleChange();
         },
         format: "yyyy-MM-dd"
       }), _react.default.createElement("i", {
@@ -223,7 +231,8 @@ function DatastoreSearchSql(props) {
         value: values.date.endDate,
         clearIcon: "X",
         onChange: function onChange(val) {
-          return setFieldValue("date.endDate", val);
+          setFieldValue("date.endDate", val);
+          handleChange();
         },
         returnValue: "end",
         format: "yyyy-MM-dd",
@@ -276,32 +285,35 @@ function DatastoreSearchSql(props) {
               type: "button",
               className: "btn btn-default dq-btn-remove",
               onClick: function onClick() {
-                return arrayHelpers.remove(index);
-              } // remove a rule from the list
-
+                // remove a rule from the list
+                arrayHelpers.remove(index);
+                handleChange();
+              }
             }, "-"), _react.default.createElement("button", {
               type: "button",
               className: "btn btn-default dq-btn-add",
               onClick: function onClick() {
-                return arrayHelpers.insert(index + 1, {
+                // insert an empty rule at a position
+                arrayHelpers.insert(index + 1, {
                   combinator: 'AND',
                   field: otherFields[0].name,
                   operator: '=',
                   value: ''
                 });
-              } // insert an empty rule at a position
-
+                handleChange();
+              }
             }, "+"));
           }) : _react.default.createElement("button", {
             type: "button",
             className: "btn btn-default dq-rule-add",
             onClick: function onClick() {
-              return arrayHelpers.push({
+              arrayHelpers.push({
                 combinator: 'AND',
                 field: otherFields[0].name,
                 operator: '=',
                 value: ''
               });
+              handleChange();
             }
           }, t('Add a rule'))), _react.default.createElement("div", {
             className: "dq-rule-submit dq-footer"
@@ -330,14 +342,14 @@ function DatastoreSearchSql(props) {
             className: "btn btn-primary reset-button",
             onClick: handleReset
           }, t('Reset')), _react.default.createElement(_reactCopyToClipboard.CopyToClipboard, {
-            text: cleanedDatastoreUrl,
-            onCopy: function onCopy() {
-              return setCopied(true);
-            }
+            text: cleanedDatastoreUrl
+          }, _react.default.createElement("div", {
+            "data-tip": t("Submit to enable")
           }, _react.default.createElement("button", {
             type: "button",
+            disabled: !canCopyUri,
             className: "btn btn-primary copy-button"
-          }, copied ? "Copied" : "Copy API URI"))));
+          }, t("Copy API URI")), !canCopyUri ? _react.default.createElement(_reactTooltip.default, null) : ""))));
         }
       }));
     }

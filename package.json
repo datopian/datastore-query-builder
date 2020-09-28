@@ -20,7 +20,8 @@
     "react-copy-to-clipboard": "^5.0.2",
     "react-date-picker": "^7.7.0",
     "react-dom": "^16.8.6",
-    "react-i18next": "^11.3.0"
+    "react-i18next": "^11.3.0",
+    "react-tooltip": "^4.2.10"
   },
   "babel": {
     "presets": [

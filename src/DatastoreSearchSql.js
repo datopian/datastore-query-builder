@@ -5,13 +5,14 @@ import {Formik, Form, FieldArray, Field} from 'formik'
 import DatePicker from 'react-date-picker'
 import {CopyToClipboard} from 'react-copy-to-clipboard'
 import {useTranslation} from "react-i18next"
+import ReactTooltip from "react-tooltip"
 
 
 function DatastoreSearchSql(props) {
   const resource = JSON.parse(JSON.stringify(props.resource))
 
   const [cleanedDatastoreUrl, setDatastoreUrl] = useState(resource.api || '')
-  const [copied, setCopied] = useState(false)
+  const [canCopyUri, setCanCopyUri] = useState(true)
 
   const dateFields = resource.schema.fields.filter(field => field.type && field.type.includes('date'))
   const defaultDateFieldName = dateFields.length > 0 ? dateFields[0].name : null
@@ -74,7 +75,6 @@ function DatastoreSearchSql(props) {
     resource.api = encodeURI(datastoreUrl)
     props.action(resource)
     setDatastoreUrl(datastoreUrl.replace('COUNT(*) OVER () AS _count, ', ''))
-    setCopied(false)
 
     // Update download links
     let downloadCsvApiUri, downloadJsonApiUri, downloadExcelApiUri
@@ -90,6 +90,7 @@ function DatastoreSearchSql(props) {
     downloadCsvApiUri = `${window.location.origin}/download/datastore_search_sql${uriObj.search}`
     uriObj.searchParams.set('format', 'xlsx')
     downloadExcelApiUri = `${window.location.origin}/download/datastore_search_sql${uriObj.search}`
+
     const ul = document.getElementById('downloads')
     const csvLink = ul.children[0].children[0]
     csvLink.setAttribute('href', downloadCsvApiUri)
@@ -97,13 +98,19 @@ function DatastoreSearchSql(props) {
     jsonLink.setAttribute('href', downloadJsonApiUri)
     const excelLink = ul.children[4].children[0]
     excelLink.setAttribute('href', downloadExcelApiUri)
+
+    setCanCopyUri(true)
   }
 
   function handleReset() {
     resource.api = props.initialApiUrl
     props.action(resource)
     setDatastoreUrl(resource.api)
-    setCopied(false)
+    setCanCopyUri(true)
+  }
+
+  function handleChange() {
+    setCanCopyUri(false)
   }
 
   return (
@@ -116,7 +123,7 @@ function DatastoreSearchSql(props) {
         handleReset()
       }
       render={({ values, setFieldValue, handleReset }) => (
-        <Form className="form-inline dq-main-container">
+        <Form className="form-inline dq-main-container" onChange={handleChange}>
           <div className="dq-heading">
             <div className="dq-heading-main"></div>
             <div className="dq-heading-total-rows">{props.totalRows && parseInt(props.totalRows).toLocaleString()}</div>
@@ -131,16 +138,22 @@ function DatastoreSearchSql(props) {
               <DatePicker
                 value={values.date.startDate}
                 clearIcon='X'
-                onChange={val => setFieldValue(`date.startDate`, val)}
+                onChange={val => {
+                  setFieldValue(`date.startDate`, val)
+                  handleChange()
+                }}
                 format='yyyy-MM-dd' />
               <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
               <DatePicker
-                  value={values.date.endDate}
-                  clearIcon='X'
-                  onChange={val => setFieldValue(`date.endDate`, val)}
-                  returnValue='end'
-                  format='yyyy-MM-dd'
-                  minDate={values.date.startDate} />
+                value={values.date.endDate}
+                clearIcon='X'
+                onChange={val => {
+                  setFieldValue(`date.endDate`, val)
+                  handleChange()
+                }}
+                returnValue='end'
+                format='yyyy-MM-dd'
+                minDate={values.date.startDate} />
             </div>
           ) : (
             ''
@@ -171,21 +184,33 @@ function DatastoreSearchSql(props) {
                       <button
                         type="button"
                         className="btn btn-default dq-btn-remove"
-                        onClick={() => arrayHelpers.remove(index)} // remove a rule from the list
+                        onClick={() => {
+                          // remove a rule from the list
+                          arrayHelpers.remove(index)
+                          handleChange()
+                        }}
                       >
                         -
                       </button>
                       <button
                         type="button"
                         className="btn btn-default dq-btn-add"
-                        onClick={() => arrayHelpers.insert(index + 1, {combinator: 'AND', field: otherFields[0].name, operator: '=', value: ''})} // insert an empty rule at a position
+                        onClick={() => {
+                          // insert an empty rule at a position
+                          arrayHelpers.insert(index + 1, {combinator: 'AND', field: otherFields[0].name, operator: '=', value: ''})
+                          handleChange()
+                        }}
                       >
                         +
                       </button>
                     </div>
                   ))
                 ) : (
-                  <button type="button" className="btn btn-default dq-rule-add" onClick={() => arrayHelpers.push({combinator: 'AND', field: otherFields[0].name, operator: '=', value: ''})}>
+                  <button type="button" className="btn btn-default dq-rule-add" onClick={
+                    () => {
+                      arrayHelpers.push({combinator: 'AND', field: otherFields[0].name, operator: '=', value: ''})
+                      handleChange()
+                    }}>
                     {/* show this when user has removed all rules from the list */}
                     {t('Add a rule')}
                   </button>
@@ -203,8 +228,16 @@ function DatastoreSearchSql(props) {
                   </Field>
                   <button type="submit" className="btn btn-primary submit-button">{t('Submit')}</button>
                   <button type="submit" className="btn btn-primary reset-button" onClick={handleReset}>{t('Reset')}</button>
-                  <CopyToClipboard text={cleanedDatastoreUrl} onCopy={() => setCopied(true)}>
-                    <button type="button" className="btn btn-primary copy-button">{copied ? "Copied" : "Copy API URI"}</button>
+                  <CopyToClipboard text={cleanedDatastoreUrl}>
+                    <div data-tip={t("Submit to enable")}>
+                      <button type="button"
+                              disabled={!canCopyUri}
+                              className="btn btn-primary copy-button">
+                        {t("Copy API URI")}
+                      </button>
+                      {!canCopyUri ? <ReactTooltip /> : "" }
+                    </div>
+
                   </CopyToClipboard>
                 </div>
               </div>
