@@ -7,6 +7,16 @@ import {CopyToClipboard} from 'react-copy-to-clipboard'
 import {useTranslation} from "react-i18next"
 import ReactTooltip from "react-tooltip"
 
+// based on row counts from manually launched script
+// see devUtils/printLargeDatasets.js for more info
+const LARGE_DATASETS_SET = new Set([
+  "consumptiondk3619codehour",
+  "consumptionpergridarea",
+  "electricityprodex5minrealtime",
+  "fixedresidualconsumption",
+  "mrstationsgasquality",
+  "powersystemrightnow"
+])
 
 function DatastoreSearchSql(props) {
   const resource = JSON.parse(JSON.stringify(props.resource))
