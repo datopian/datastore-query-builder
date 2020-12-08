@@ -163,7 +163,7 @@ function DatastoreSearchSql(props) {
           return setFieldValue("startDate", val);
         },
         format: "yyyy-MM-dd"
-      }), _react.default.createElement("i", {
+      }), _react.default.createElement("span", {
         className: "fa fa-long-arrow-right",
         "aria-hidden": "true"
       }), _react.default.createElement(_reactDatePicker.default, {
@@ -197,6 +197,7 @@ function DatastoreSearchSql(props) {
               className: "dq-rule-item"
             }, _react.default.createElement(_formik.Field, {
               name: "rules.".concat(index, ".combinator"),
+              "aria-label": "Choose combinator: AND/OR",
               component: "select",
               className: "form-control",
               required: true
@@ -206,6 +207,7 @@ function DatastoreSearchSql(props) {
               value: "OR"
             }, "OR")), _react.default.createElement(_formik.Field, {
               name: "rules.".concat(index, ".field"),
+              "aria-label": "Choose field",
               component: "select",
               className: "form-control",
               required: true
@@ -216,6 +218,7 @@ function DatastoreSearchSql(props) {
               }, field.title || field.name);
             })), _react.default.createElement(_formik.Field, {
               name: "rules.".concat(index, ".operator"),
+              "aria-label": "Choose operator",
               component: "select",
               className: "form-control",
               required: true
@@ -226,6 +229,7 @@ function DatastoreSearchSql(props) {
               }, operator.label);
             })), _react.default.createElement(_formik.Field, {
               name: "rules.".concat(index, ".value"),
+              "aria-label": "Input custom rule",
               className: "form-control",
               required: true
             }), _react.default.createElement("button", {
