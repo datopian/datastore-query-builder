@@ -155,6 +155,10 @@ function DatastoreSearchSql(props) {
       }, _react.default.createElement(_reactDatePicker.default, {
         value: values.startDate,
         clearIcon: "X",
+        nativeInputAriaLabel: "Start date input box",
+        dayAriaLabel: "Start day",
+        monthAriaLabel: "Start month",
+        yearAriaLabel: "Start year",
         onChange: function onChange(val) {
           return setFieldValue("startDate", val);
         },
@@ -165,6 +169,10 @@ function DatastoreSearchSql(props) {
       }), _react.default.createElement(_reactDatePicker.default, {
         value: values.endDate,
         clearIcon: "X",
+        nativeInputAriaLabel: "End date input box",
+        dayAriaLabel: "End day",
+        monthAriaLabel: "End month",
+        yearAriaLabel: "End year",
         onChange: function onChange(val) {
           return setFieldValue("endDate", val);
         },

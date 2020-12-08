@@ -102,12 +102,20 @@ function DatastoreSearchSql(props) {
               <DatePicker
                 value={values.startDate}
                 clearIcon='X'
+                nativeInputAriaLabel="Start date input box"
+                dayAriaLabel="Start day"
+                monthAriaLabel="Start month"
+                yearAriaLabel="Start year"
                 onChange={val => setFieldValue(`startDate`, val)}
                 format='yyyy-MM-dd' />
               <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
               <DatePicker
                   value={values.endDate}
                   clearIcon='X'
+                  nativeInputAriaLabel="End date input box"
+                  dayAriaLabel="End day"
+                  monthAriaLabel="End month"
+                  yearAriaLabel="End year"
                   onChange={val => setFieldValue(`endDate`, val)}
                   returnValue='end'
                   format='yyyy-MM-dd'
