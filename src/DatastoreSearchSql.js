@@ -102,12 +102,20 @@ function DatastoreSearchSql(props) {
               <DatePicker
                 value={values.startDate}
                 clearIcon='X'
+                nativeInputAriaLabel="Start date input box"
+                dayAriaLabel="Start day"
+                monthAriaLabel="Start month"
+                yearAriaLabel="Start year"
                 onChange={val => setFieldValue(`startDate`, val)}
                 format='yyyy-MM-dd' />
-              <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
+              <span className="fa fa-long-arrow-right" aria-hidden="true"></span>
               <DatePicker
                   value={values.endDate}
                   clearIcon='X'
+                  nativeInputAriaLabel="End date input box"
+                  dayAriaLabel="End day"
+                  monthAriaLabel="End month"
+                  yearAriaLabel="End year"
                   onChange={val => setFieldValue(`endDate`, val)}
                   returnValue='end'
                   format='yyyy-MM-dd'
@@ -127,21 +135,21 @@ function DatastoreSearchSql(props) {
                 {values.rules && values.rules.length > 0 ? (
                   values.rules.map((rule, index) => (
                     <div key={index} className="dq-rule-item">
-                      <Field name={`rules.${index}.combinator`} component="select" className="form-control" required>
+                      <Field name={`rules.${index}.combinator`} aria-label="Choose combinator: AND/OR" component="select" className="form-control" required>
                         <option value="AND">AND</option>
                         <option value="OR">OR</option>
                       </Field>
-                      <Field name={`rules.${index}.field`} component="select" className="form-control" required>
+                      <Field name={`rules.${index}.field`} aria-label="Choose field" component="select" className="form-control" required>
                         {otherFields.map((field, index) => (
                           <option value={field.name} key={`field${index}`}>{field.title || field.name}</option>
                         ))}
                       </Field>
-                      <Field name={`rules.${index}.operator`} component="select" className="form-control" required>
+                      <Field name={`rules.${index}.operator`} aria-label="Choose operator" component="select" className="form-control" required>
                         {operators.map((operator, index) => (
                           <option value={operator.name} key={`operator${index}`}>{operator.label}</option>
                         ))}
                       </Field>
-                      <Field name={`rules.${index}.value`} className="form-control" required />
+                      <Field name={`rules.${index}.value`} aria-label="Input custom rule" className="form-control" required />
                       <button
                         type="button"
                         className="btn btn-default dq-btn-remove"
