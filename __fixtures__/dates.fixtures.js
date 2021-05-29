@@ -17,6 +17,10 @@ const resource = {
       },
       {
         name: 'c',
+        type: 'date'
+      },
+      {
+        name: 'd',
         type: 'string'
       }
     ]
