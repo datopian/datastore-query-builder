@@ -19,9 +19,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function DatastoreSearchSql(props) {
   var resource = JSON.parse(JSON.stringify(props.resource));
-  var dateField = resource.schema.fields.find(function (field) {
+  var dateFields = resource.schema.fields.filter(function (field) {
     return field.type && field.type.includes('date');
   });
+  var defaultDateFieldName = dateFields.length > 0 ? dateFields[0].name : null;
   var otherFields = resource.schema.fields.filter(function (field) {
     return !(field.type && field.type.includes('date'));
   });
@@ -53,7 +54,7 @@ function DatastoreSearchSql(props) {
     var clonedValues = JSON.parse(JSON.stringify(values));
     var errors = {};
 
-    if (!clonedValues.startDate && !clonedValues.endDate && clonedValues.rules.length === 0) {
+    if (!clonedValues.date.startDate && !clonedValues.date.endDate && clonedValues.rules.length === 0) {
       // No filters given so alert about that
       errors.message = 'Please, provide at least one rule.';
     }
@@ -67,14 +68,14 @@ function DatastoreSearchSql(props) {
 
     var sqlQueryString = "SELECT COUNT(*) OVER () AS _count, * FROM \"".concat(resource.id, "\" WHERE ");
 
-    if (clonedValues.startDate) {
+    if (clonedValues.date.startDate) {
       var rule = {
         combinator: 'AND',
-        field: dateField.name,
+        field: clonedValues.date.fieldName,
         operator: '>=',
-        value: clonedValues.startDate
+        value: clonedValues.date.startDate
       };
-      var localDateTime = new Date(clonedValues.startDate); // Now, convert it into GMT considering offset
+      var localDateTime = new Date(clonedValues.date.startDate); // Now, convert it into GMT considering offset
 
       var offset = localDateTime.getTimezoneOffset();
       localDateTime = new Date(localDateTime.getTime() - offset * 60 * 1000);
@@ -82,15 +83,15 @@ function DatastoreSearchSql(props) {
       clonedValues.rules.push(rule);
     }
 
-    if (clonedValues.endDate) {
+    if (clonedValues.date.endDate) {
       var _rule = {
         combinator: 'AND',
-        field: dateField.name,
+        field: clonedValues.date.fieldName,
         operator: '<=',
-        value: clonedValues.endDate
+        value: clonedValues.date.endDate
       };
 
-      var _localDateTime = new Date(clonedValues.endDate); // Now, convert it into GMT considering offset
+      var _localDateTime = new Date(clonedValues.date.endDate); // Now, convert it into GMT considering offset
 
 
       var _offset = _localDateTime.getTimezoneOffset();
@@ -130,8 +131,11 @@ function DatastoreSearchSql(props) {
   return _react.default.createElement(_formik.Formik, {
     initialValues: {
       rules: [],
-      startDate: null,
-      endDate: null
+      date: {
+        startDate: null,
+        endDate: null,
+        fieldName: defaultDateFieldName
+      }
     },
     validate: function validate(values) {
       return _validate(values);
@@ -150,41 +154,45 @@ function DatastoreSearchSql(props) {
         className: "form-inline dq-main-container"
       }, _react.default.createElement("div", {
         className: "dq-heading"
-      }), dateField ? _react.default.createElement("div", {
+      }), defaultDateFieldName ? _react.default.createElement("div", {
         className: "dq-date-picker"
-      }, _react.default.createElement(_reactDatePicker.default, {
-        value: values.startDate,
+      }, _react.default.createElement(_formik.Field, {
+        name: "date.fieldName",
+        component: "select",
+        className: "form-control"
+      }, dateFields.map(function (field, index) {
+        return _react.default.createElement("option", {
+          value: field.name,
+          key: "dateField".concat(index)
+        }, field.title || field.name);
+      })), _react.default.createElement(_reactDatePicker.default, {
+        value: values.date.startDate,
         clearIcon: "X",
         nativeInputAriaLabel: "Start date input box",
         dayAriaLabel: "Start day",
         monthAriaLabel: "Start month",
         yearAriaLabel: "Start year",
         onChange: function onChange(val) {
-          return setFieldValue("startDate", val);
+          return setFieldValue("date.startDate", val);
         },
         format: "yyyy-MM-dd"
       }), _react.default.createElement("span", {
         className: "fa fa-long-arrow-right",
         "aria-hidden": "true"
       }), _react.default.createElement(_reactDatePicker.default, {
-        value: values.endDate,
+        value: values.date.endDate,
         clearIcon: "X",
         nativeInputAriaLabel: "End date input box",
         dayAriaLabel: "End day",
         monthAriaLabel: "End month",
         yearAriaLabel: "End year",
         onChange: function onChange(val) {
-          return setFieldValue("endDate", val);
+          return setFieldValue("date.endDate", val);
         },
         returnValue: "end",
         format: "yyyy-MM-dd",
-        minDate: values.startDate
-      }), _react.default.createElement("div", {
-        className: "datetime-field-name",
-        style: {
-          display: 'none'
-        }
-      }, dateField.title || dateField.name)) : '', _react.default.createElement(_formik.FieldArray, {
+        minDate: values.date.startDate
+      })) : '', _react.default.createElement(_formik.FieldArray, {
         name: "rules",
         render: function render(arrayHelpers) {
           return _react.default.createElement("div", {
