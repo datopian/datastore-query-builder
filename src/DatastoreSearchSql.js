@@ -74,7 +74,6 @@ function DatastoreSearchSql(props) {
     const datastoreUrl = encodeURI(props.apiUrl + `datastore_search_sql?sql=${sqlQueryString}`)
     // Trigger Redux action
     resource.api = datastoreUrl
-    console.log(resource)
     props.action(resource)
   }
 
