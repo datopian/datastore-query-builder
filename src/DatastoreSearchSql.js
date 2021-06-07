@@ -86,8 +86,8 @@ function DatastoreSearchSql(props) {
   return (
     <Formik
       initialValues={{
-        rules: [], 
-        date: {
+        rules: resource.rules || [],
+        date: resource.date || {
           startDate: null,
           endDate: null,
           fieldName: defaultDateFieldName
