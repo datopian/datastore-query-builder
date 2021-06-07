@@ -130,8 +130,8 @@ function DatastoreSearchSql(props) {
 
   return _react.default.createElement(_formik.Formik, {
     initialValues: {
-      rules: [],
-      date: {
+      rules: resource.rules || [],
+      date: resource.date || {
         startDate: null,
         endDate: null,
         fieldName: defaultDateFieldName
