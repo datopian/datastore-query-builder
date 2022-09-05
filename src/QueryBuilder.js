@@ -97,14 +97,14 @@ except requests.exceptions.RequestException as e:
 
   return (
     <div className="dq-querybuilder">
-      <h3>{t('Integrate into your toolsr')}</h3>
+      <h3>{t('Integrate into your tools')}</h3>
       <Tabs>
         {snippetSets.map((item, key) => {
           return <TabLink onClick={onTabChange} to={item.lang} key={key} className={`mr-4 tab-${item.lang}`}>{item.lang}</TabLink>
         })}
 
         {snippetSets.map((item, key) => {
-          return <TabContent key={key} for={item.lang} className="dq">
+          return <TabContent key={key} for={item.lang}>
             <button className="snippet-copy" style={{ float: 'right' }}
               onClick={() => handleCopy(item.snippet)}>{copyButton}</button>
             <Highlight language={item.format} className={`language-${item.format}`}>
