@@ -2160,6 +2160,11 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
+classnames@^2.2.6:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.1.tgz#dfcfa3891e306ec1dad105d0e88f4417b8535e8e"
+  integrity sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==
+
 clean-css@4.2.x:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/clean-css/-/clean-css-4.2.1.tgz#2d411ef76b8569b6d0c84068dabe85b0aa5e5c17"
@@ -4121,6 +4126,11 @@ he@1.2.x:
 hex-color-regex@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
+
+highlight.js@^10.5.0:
+  version "10.7.3"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.7.3.tgz#697272e3991356e40c3cac566a74eef681756531"
+  integrity sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==
 
 hmac-drbg@^1.0.1:
   version "1.0.1"
@@ -7571,6 +7581,13 @@ react-fit@^1.0.3:
     detect-element-overflow "^1.1.1"
     prop-types "^15.6.0"
 
+react-highlight@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/react-highlight/-/react-highlight-0.14.0.tgz#5aefa5518baa580f96b68d48129d7a5d2dc0c9ef"
+  integrity sha512-kWE+KXOXidS7SABhVopOgMnowbI3RAfeGZbnrduLNlWrYAED8sycL9l/Fvw3w0PFpIIawB7mRDnyhDcM/cIIGA==
+  dependencies:
+    highlight.js "^10.5.0"
+
 react-i18next@^11.3.0:
   version "11.3.0"
   resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.3.0.tgz#8c827b084708924fd2e8c787aca78e0f7966fa44"
@@ -7645,6 +7662,14 @@ react-scripts@3.0.1:
     workbox-webpack-plugin "4.2.0"
   optionalDependencies:
     fsevents "2.0.6"
+
+react-tabs-redux@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/react-tabs-redux/-/react-tabs-redux-4.0.0.tgz#b803aa3e80ae317311a83b3740ae13a938247156"
+  integrity sha512-yk5afCpUlmWqXA/fhSi02YaCSlpFH5v6QlUiiVRx+V1OTyLDaZFDnARCflUoGkwIq00o7ryVWUXNkQ3UwAcebA==
+  dependencies:
+    classnames "^2.2.6"
+    prop-types "^15.6.2"
 
 react@^16.8.6:
   version "16.9.0"
