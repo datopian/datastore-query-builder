@@ -73,7 +73,6 @@ import requests
 from urllib import parse
 
 sql_query = '''${queryString}'''
-
 params = {'sql': sql_query}
 
 try:

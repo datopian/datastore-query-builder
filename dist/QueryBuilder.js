@@ -59,7 +59,7 @@ function QueryBuilder(props) {
   }, {
     lang: 'Pandas',
     format: 'python',
-    snippet: "# Install pandas package if you don't have it already\n# pip install pandas\n\n# Get data and convert into dataframe\nimport pandas as pd\nimport requests\nfrom urllib import parse\n\nsql_query = '''".concat(queryString, "'''\n\nparams = {'sql': sql_query}\n\ntry:\n    resposne = requests.get('").concat(apiUrl, "datastore_search_sql', params = parse.urlencode(params))\n    data = resposne.json()[\"result\"]\n    df = pd.DataFrame(data[\"records\"])\n    print(df) # Dataframe\nexcept requests.exceptions.RequestException as e:\n    print(e.response.text)")
+    snippet: "# Install pandas package if you don't have it already\n# pip install pandas\n\n# Get data and convert into dataframe\nimport pandas as pd\nimport requests\nfrom urllib import parse\n\nsql_query = '''".concat(queryString, "'''\nparams = {'sql': sql_query}\n\ntry:\n    resposne = requests.get('").concat(apiUrl, "datastore_search_sql', params = parse.urlencode(params))\n    data = resposne.json()[\"result\"]\n    df = pd.DataFrame(data[\"records\"])\n    print(df) # Dataframe\nexcept requests.exceptions.RequestException as e:\n    print(e.response.text)")
   }];
 
   function handleCopy(snippet) {
