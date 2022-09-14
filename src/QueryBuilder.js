@@ -25,12 +25,11 @@ function QueryBuilder(props) {
     snippet: `import requests
 from urllib import parse
 
-sql_query =  '''SELECT COUNT(*) OVER () AS _count, * FROM "0b2b7ce6-d7b8-41dc-a549-1b8598ca6c9d" WHERE "index" = 'high' ORDER BY "_id" ASC LIMIT 100'''
+sql_query =  '''${queryString}'''
 params = {'sql': sql_query}
 
 try:
-    resposne = requests.get('https://ckan-dev.nationalgrid.dev.datopian.com/api/3/action/datastore_search_sql', 
-							  params = parse.urlencode(params))
+    resposne = requests.get('${apiUrl}datastore_search_sql', params = parse.urlencode(params))
     data = resposne.json()["result"]
     print(data) # Printing data
 except requests.exceptions.RequestException as e:
@@ -65,7 +64,7 @@ print(df)`
   {
     lang: 'Pandas',
     format: 'python',
-    snippet: `# Install pandas python package
+    snippet: `# Install pandas package if you don't have it already
 # pip install pandas
 
 # Get data and convert into dataframe
@@ -73,14 +72,14 @@ import pandas as pd
 import requests
 from urllib import parse
 
-sql_query =  '''SELECT COUNT(*) OVER () AS _count, * FROM "0b2b7ce6-d7b8-41dc-a549-1b8598ca6c9d" WHERE "index" = 'high' ORDER BY "_id" ASC LIMIT 100'''
+sql_query = '''${queryString}'''
+
 params = {'sql': sql_query}
 
 try:
-    resposne = requests.get('https://ckan-dev.nationalgrid.dev.datopian.com/api/3/action/datastore_search_sql', 
-                params = parse.urlencode(params))
-    data_dict = resposne.json()["result"]
-    df = pd.DataFrame(data_dict['records'])
+    resposne = requests.get('${apiUrl}datastore_search_sql', params = parse.urlencode(params))
+    data = resposne.json()["result"]
+    df = pd.DataFrame(data["records"])
     print(df) # Dataframe
 except requests.exceptions.RequestException as e:
     print(e.response.text)`

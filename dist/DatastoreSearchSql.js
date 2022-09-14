@@ -148,7 +148,7 @@ function DatastoreSearchSql(props) {
   function handleReset() {
     // Initial api url should be `datastore_search` without any options.
     resource.api = props.apiUrl + "datastore_search?resource_id=".concat(resource.id, "&limit=100");
-    props.action(resource);
+    setQuery("SELECT * FROM  \"".concat(props.resource.id, "\" ORDER BY \"_id\" ASC LIMIT 100"));
   }
 
   function QueryBuiderToggle() {
