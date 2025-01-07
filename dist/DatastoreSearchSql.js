@@ -187,13 +187,15 @@ function DatastoreSearchSql(props) {
       }, _react.default.createElement(_formik.Field, {
         name: "date.fieldName",
         component: "select",
-        className: "form-control"
+        className: "form-control",
+        "aria-label": "Choose date field"
       }, dateFields.map(function (field, index) {
         return _react.default.createElement("option", {
           value: field.name,
           key: "dateField".concat(index)
         }, field.title || field.name);
       })), _react.default.createElement(_reactDatePicker.default, {
+        calendarAriaLabel: "select start date from calendar",
         value: values.date.startDate,
         clearIcon: "X",
         nativeInputAriaLabel: "Start date input box",
@@ -203,11 +205,13 @@ function DatastoreSearchSql(props) {
         onChange: function onChange(val) {
           return setFieldValue("date.startDate", val);
         },
-        format: "yyyy-MM-dd"
+        format: "yyyy-MM-dd",
+        altInput: true
       }), _react.default.createElement("span", {
         className: "fa fa-long-arrow-right",
         "aria-hidden": "true"
       }), _react.default.createElement(_reactDatePicker.default, {
+        calendarAriaLabel: "select end date from calendar",
         value: values.date.endDate,
         clearIcon: "X",
         nativeInputAriaLabel: "End date input box",

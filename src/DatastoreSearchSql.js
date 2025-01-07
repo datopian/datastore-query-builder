@@ -118,7 +118,7 @@ function DatastoreSearchSql(props) {
             <div className="dq-heading"></div>
             {defaultDateFieldName ? (
               <div className="dq-date-picker">
-                <Field name={`date.fieldName`} component="select" className="form-control" ariaLabel="Choose date field">
+                <Field name={`date.fieldName`} component="select" className="form-control" aria-label="Choose date field">
                   {dateFields.map((field, index) => (
                     <option value={field.name} key={`dateField${index}`}>{field.title || field.name}</option>
                   ))}
