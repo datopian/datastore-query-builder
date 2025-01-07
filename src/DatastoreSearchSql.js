@@ -1,15 +1,15 @@
 import "./i18n/i18n"
 
-import React, {useState} from 'react';
-import {Formik, Form, FieldArray, Field} from 'formik'
+import React, { useState } from 'react';
+import { Formik, Form, FieldArray, Field } from 'formik'
 import DatePicker from 'react-date-picker'
-import {useTranslation} from "react-i18next"
+import { useTranslation } from "react-i18next"
 import QueryBuilder from './QueryBuilder'
 
 
 function DatastoreSearchSql(props) {
-  const[showQueryBuilder, setShowQueryBuilder] = useState(false)
-  const[query, setQuery] = useState(`SELECT * FROM  "${props.resource.id}" ORDER BY "_id" ASC LIMIT 100`)
+  const [showQueryBuilder, setShowQueryBuilder] = useState(false)
+  const [query, setQuery] = useState(`SELECT * FROM  "${props.resource.id}" ORDER BY "_id" ASC LIMIT 100`)
 
   const resource = JSON.parse(JSON.stringify(props.resource))
 
@@ -20,12 +20,12 @@ function DatastoreSearchSql(props) {
   const { t } = useTranslation();
 
   const operators = [
-    {name: '=', label: '='},
-    {name: '!=', label: '!='},
-    {name: '<', label: '<'},
-    {name: '>', label: '>'},
-    {name: '<=', label: '<='},
-    {name: '>=', label: '>='}
+    { name: '=', label: '=' },
+    { name: '!=', label: '!=' },
+    { name: '<', label: '<' },
+    { name: '>', label: '>' },
+    { name: '<=', label: '<=' },
+    { name: '>=', label: '>=' }
   ]
 
   function validate(values) {
@@ -43,7 +43,7 @@ function DatastoreSearchSql(props) {
     // we get number of total rows info.
     let sqlQueryString = `SELECT COUNT(*) OVER () AS _count, * FROM "${resource.id}" WHERE `
     if (clonedValues.date.startDate) {
-      const rule = { combinator: 'AND', field: clonedValues.date.fieldName, operator: '>=', value: clonedValues.date.startDate}
+      const rule = { combinator: 'AND', field: clonedValues.date.fieldName, operator: '>=', value: clonedValues.date.startDate }
       let localDateTime = new Date(clonedValues.date.startDate);
       // Now, convert it into GMT considering offset
       let offset = localDateTime.getTimezoneOffset();
@@ -52,7 +52,7 @@ function DatastoreSearchSql(props) {
       clonedValues.rules.push(rule)
     }
     if (clonedValues.date.endDate) {
-      const rule = { combinator: 'AND', field: clonedValues.date.fieldName, operator: '<=', value: clonedValues.date.endDate}
+      const rule = { combinator: 'AND', field: clonedValues.date.fieldName, operator: '<=', value: clonedValues.date.endDate }
       let localDateTime = new Date(clonedValues.date.endDate);
       // Now, convert it into GMT considering offset
       let offset = localDateTime.getTimezoneOffset();
@@ -88,7 +88,7 @@ function DatastoreSearchSql(props) {
     setQuery(`SELECT * FROM  "${props.resource.id}" ORDER BY "_id" ASC LIMIT 100`)
     props.action(resource)
   }
-  
+
   function QueryBuiderToggle() {
     setShowQueryBuilder(!showQueryBuilder)
   }
@@ -101,7 +101,7 @@ function DatastoreSearchSql(props) {
           startDate: null,
           endDate: null,
           fieldName: defaultDateFieldName
-        } 
+        }
       }}
       validate={values =>
         validate(values)
@@ -118,12 +118,14 @@ function DatastoreSearchSql(props) {
             <div className="dq-heading"></div>
             {defaultDateFieldName ? (
               <div className="dq-date-picker">
-                <Field name={`date.fieldName`} component="select" className="form-control">
-                  { dateFields.map((field, index) => (
+                <Field name={`date.fieldName`} component="select" className="form-control" ariaLabel="Choose date field">
+                  {dateFields.map((field, index) => (
                     <option value={field.name} key={`dateField${index}`}>{field.title || field.name}</option>
                   ))}
                 </Field>
+
                 <DatePicker
+                  calendarAriaLabel="select start date from calendar"
                   value={values.date.startDate}
                   clearIcon='X'
                   nativeInputAriaLabel="Start date input box"
@@ -131,19 +133,22 @@ function DatastoreSearchSql(props) {
                   monthAriaLabel="Start month"
                   yearAriaLabel="Start year"
                   onChange={val => setFieldValue(`date.startDate`, val)}
-                  format='yyyy-MM-dd' />
+                  format='yyyy-MM-dd'
+                  altInput={true}
+                />
                 <span className="fa fa-long-arrow-right" aria-hidden="true"></span>
                 <DatePicker
-                    value={values.date.endDate}
-                    clearIcon='X'
-                    nativeInputAriaLabel="End date input box"
-                    dayAriaLabel="End day"
-                    monthAriaLabel="End month"
-                    yearAriaLabel="End year"
-                    onChange={val => setFieldValue(`date.endDate`, val)}
-                    returnValue='end'
-                    format='yyyy-MM-dd'
-                    minDate={values.date.startDate} />
+                  calendarAriaLabel="select end date from calendar"
+                  value={values.date.endDate}
+                  clearIcon='X'
+                  nativeInputAriaLabel="End date input box"
+                  dayAriaLabel="End day"
+                  monthAriaLabel="End month"
+                  yearAriaLabel="End year"
+                  onChange={val => setFieldValue(`date.endDate`, val)}
+                  returnValue='end'
+                  format='yyyy-MM-dd'
+                  minDate={values.date.startDate} />
               </div>
             ) : (
               ''
@@ -153,58 +158,59 @@ function DatastoreSearchSql(props) {
               render={arrayHelpers => (
                 <div className="dq-rule-container">
                   <div className="dq-body">
-                  {values.rules && values.rules.length > 0 ? (
-                    values.rules.map((rule, index) => (
-                      <div key={index} className="dq-rule-item">
-                        <Field name={`rules.${index}.combinator`} aria-label="Choose combinator: AND/OR" component="select" className="form-control" required>
-                          <option value="AND">AND</option>
-                          <option value="OR">OR</option>
-                        </Field>
-                        <Field name={`rules.${index}.field`} aria-label="Choose field" component="select" className="form-control" required>
-                          {otherFields.map((field, index) => (
-                            <option value={field.name} key={`field${index}`}>{field.title || field.name}</option>
-                          ))}
-                        </Field>
-                        <Field name={`rules.${index}.operator`} aria-label="Choose operator" component="select" className="form-control" required>
-                          {operators.map((operator, index) => (
-                            <option value={operator.name} key={`operator${index}`}>{operator.label}</option>
-                          ))}
-                        </Field>
-                        <Field name={`rules.${index}.value`} aria-label="Input custom rule" className="form-control" required />
-                        <button
-                          type="button"
-                          className="btn btn-default dq-btn-remove"
-                          onClick={() => arrayHelpers.remove(index)} // remove a rule from the list
-                        >
-                          -
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-default dq-btn-add"
-                          onClick={() => arrayHelpers.insert(index, {combinator: 'AND', field: otherFields[0].name, operator: '=', value: ''})} // insert an empty rule at a position
-                        >
-                          +
-                        </button>
-                      </div>
-                    ))
-                  ) : (
-                    <button type="button" className="btn btn-default dq-rule-add" onClick={() => arrayHelpers.push({combinator: 'AND', field: otherFields[0].name, operator: '=', value: ''})}>
-                      {/* show this when user has removed all rules from the list */}
-                      {t('Add a rule')}
-                    </button>
-                  )}
+                    {values.rules && values.rules.length > 0 ? (
+                      values.rules.map((rule, index) => (
+                        <div key={index} className="dq-rule-item">
+                          <Field name={`rules.${index}.combinator`} aria-label="Choose combinator: AND/OR" component="select" className="form-control" required>
+                            <option value="AND">AND</option>
+                            <option value="OR">OR</option>
+                          </Field>
+                          <Field name={`rules.${index}.field`} aria-label="Choose field" component="select" className="form-control" required>
+                            {otherFields.map((field, index) => (
+                              <option value={field.name} key={`field${index}`}>{field.title || field.name}</option>
+                            ))}
+                          </Field>
+                          <Field name={`rules.${index}.operator`} aria-label="Choose operator" component="select" className="form-control" required>
+                            {operators.map((operator, index) => (
+                              <option value={operator.name} key={`operator${index}`}>{operator.label}</option>
+                            ))}
+                          </Field>
+                          <Field name={`rules.${index}.value`} aria-label="Input custom rule" className="form-control" required />
+                          <button
+                            type="button"
+                            className="btn btn-default dq-btn-remove"
+                            onClick={() => arrayHelpers.remove(index)} // remove a rule from the list
+                          >
+                            -
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-default dq-btn-add"
+                            onClick={() => arrayHelpers.insert(index, { combinator: 'AND', field: otherFields[0].name, operator: '=', value: '' })} // insert an empty rule at a position
+                          >
+                            +
+                          </button>
+                        </div>
+                      ))
+                    ) : (
+                      <button type="button" className="btn btn-default dq-rule-add" onClick={() => arrayHelpers.push({ combinator: 'AND', field: otherFields[0].name, operator: '=', value: '' })}>
+                        {/* show this when user has removed all rules from the list */}
+                        {t('Add a rule')}
+                      </button>
+                    )}
                   </div>
                   <div className="dq-rule-submit dq-footer">
                     <button type="submit" className="btn btn-primary submit-button">{t('Submit')}</button>
                     <button type="submit" className="btn btn-primary reset-button" onClick={handleReset}>{t('Reset')}</button>
-                    <button type='button' className={`btn btn-default query-builder-button ${showQueryBuilder?'active': ''}`} onClick={QueryBuiderToggle}>{t('Query Builder')}</button>
+                    <button type='button' className={`btn btn-default query-builder-button ${showQueryBuilder ? 'active' : ''}`} onClick={QueryBuiderToggle}>{t('Query Builder')}</button>
                   </div>
                 </div>
               )}
             />
+
           </Form>
           {
-            showQueryBuilder?<QueryBuilder apiUrl={props.apiUrl} queryString={query}/>:null
+            showQueryBuilder ? <QueryBuilder apiUrl={props.apiUrl} queryString={query} /> : null
           }
         </>
       )}
